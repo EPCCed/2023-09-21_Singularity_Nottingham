@@ -15,7 +15,7 @@ title: "Reproducible computational environments using containers: Introduction t
 # Life cycle stage of the lesson
 # See this page for more details: https://cdh.carpentries.org/the-lesson-life-cycle.html
 # Possible values: "pre-alpha", "alpha", "beta", "stable"
-life_cycle: "alpha"
+life_cycle: "stable"
 
 #------------------------------------------------------------
 # Generic settings (should not need to change).
@@ -30,7 +30,7 @@ kind: "lesson"
 repository: <USERNAME>/<PROJECT>
 
 # Email address, no mailto:
-email: "jeremy.cohen@imperial.ac.uk"
+email: "a.turner@epcc.ed.ac.uk"
 
 # Sites.
 amy_site: "https://amy.carpentries.org/"
@@ -99,6 +99,17 @@ exclude:
 # Turn on built-in syntax highlighting.
 highlighter: rouge
 
-
 # Remote theme
-remote_theme: carpentries/carpentries-theme
+remote_theme: carpentries/carpentries-theme@main
+
+episode_order:
+  - 01-singularity-gettingstarted
+  - 02-singularity-cache
+  - 03-singularity-shell
+  - 04-singularity-files
+  - 05-singularity-docker
+  - 06-singularity-images-prep
+  - 07-singularity-images-building
+  - 08-singularity-mpi.md
+
+
