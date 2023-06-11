@@ -1,5 +1,5 @@
 ---
-title: "Singularity: Getting started"
+title: "Using Singularity: quick review"
 start: true
 teaching: 30
 exercises: 20
