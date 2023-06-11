@@ -1,10 +1,11 @@
 ---
 title: Setup
 ---
-If you are attending a taught version of this lesson, it is likely that the course organisers will provide access to a platform with Singularity and MPI pre-installed for undertaking parts of the lesson. You may be required to undertake an account registration process in order to gain access this platform. The course organisers will provide details in advance.
 
-For building containers, you'll need access to a platform with [Docker](https://www.docker.com/) installed, where either your user is in the `docker` group (i.e. you can run and commit containers and run other docker commands as your own user without having to prefix docker commands with `sudo`), or where your user is configured for sudo access on the system and you can run Docker commands when prefixing them with `sudo`.
+You will be using your laptop tp run and build Singularity images. You should ensure that you have Singularity installed before you come along to the course. Instructions for installing Singularity on Windows (within WSL2) can be found on the BIOIN wiki space at:
 
-Beyond any account registration that may be required and the prerequisites described on the main lesson page, there is no further lesson setup to complete.
+https://aa-gen.atlassian.net/wiki/spaces/BIOIN/pages/7068589/Setting+up+WSL+on+Windows+10+for+Singularity+container+development
+
+If you are having problems installing Singularity, members of the BIOIN team will be available to help on the morning before the course starts (Wed 21 June 2023).
 
 {% include links.md %}
