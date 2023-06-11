@@ -3,7 +3,6 @@ title: "Running MPI parallel jobs using Singularity containers"
 teaching: 30
 exercises: 40
 questions:
-# - "Can I run MPI parallel codes from Singularity containers on a local/institutional/national HPC platform?"
 - "How do I set up and run an MPI job from a Singularity container?"
 objectives:
 - "Learn how MPI applications within Singularity containers can be run on HPC platforms"
@@ -13,10 +12,6 @@ keypoints:
 - "When running an MPI application within a Singularity container, use the MPI executable on the host system to launch a Singularity container for each process."
 - "Think about parallel application performance requirements and how where you build/run your image may affect that."
 ---
-
-## Running MPI parallel codes with Singularity containers
-
-### MPI overview
 
 MPI - [Message Passing Interface](https://en.wikipedia.org/wiki/Message_Passing_Interface) - is a widely used standard for parallel programming. It is used for exchanging messages/data between processes in a parallel application. If you've been involved in developing or working with computational science software, you may already be familiar with MPI and running MPI applications.
 

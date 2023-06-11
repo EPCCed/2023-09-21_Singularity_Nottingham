@@ -110,7 +110,7 @@ episode_order:
   - singularity-docker
   - singularity-files
   - singularity-images-building
-  - singularity-mpi.md
-  - reproducibility.md
+  - singularity-mpi
+  - reproducibility
 
 
