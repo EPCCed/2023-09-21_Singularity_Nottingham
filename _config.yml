@@ -103,13 +103,14 @@ highlighter: rouge
 remote_theme: carpentries/carpentries-theme@main
 
 episode_order:
-  - 01-singularity-gettingstarted
-  - 02-singularity-cache
-  - 03-singularity-shell
-  - 04-singularity-files
-  - 05-singularity-docker
-  - 06-singularity-images-prep
-  - 07-singularity-images-building
-  - 08-singularity-mpi.md
+  - introduction
+  - singularity-gettingstarted
+  - singularity-cache
+  - singularity-shell
+  - singularity-docker
+  - singularity-files
+  - singularity-images-building
+  - singularity-mpi.md
+  - reproducibility.md
 
 
