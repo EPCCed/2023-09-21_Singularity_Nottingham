@@ -109,6 +109,7 @@ episode_order:
   - singularity-shell
   - singularity-docker
   - singularity-files
+  - using-singularity-review
   - singularity-images-building
   - reproducibility
   - singularity-mpi
