@@ -13,23 +13,10 @@ This lesson will introduce Singularity from scratch showing you how to run a sim
 {% comment %} This is a comment in Liquid {% endcomment %}
 
 > ## Prerequisites
-> There are two core elements to this lesson - _running containers_ and _building containers_. The prerequisites are slightly different for each and are explained below.
->
-> **Running containers:** (episodes 1-5 and 8)
-> - Access to a local or remote platform with Singularity pre-installed and accessible to you as a user (i.e. no administrator/root access required).
->   - If you are attending a taught version of this material, it is expected that the course organisers will provide access to a platform (e.g. an institutional HPC cluster) that you can use for these sections of the material.
-> - The platform you will be using should also have MPI installed (required for episode 8).
->
-> **Building containers:** (episodes 6 and 7)
-> Building containers requires access to a platform with an installation of Singularity on which you also have administrative access. If you run Linux and are comfortable with following the [Singularity installation instructions](https://sylabs.io/guides/3.5/admin-guide/installation.html), then installing Singularity directly on your system is an option. However, we strongly recommend using the [Docker Singularity container](https://quay.io/repository/singularity/singularity?tab=tags) for this section of the material. Details are provided on how to use the container in the relevant section of the lesson material. To support building containers, the prerequisite is therefore:
-> 
-> - Access to a system with Docker installed on which you can run the Docker Singularity  container.
->
->      OR
->
-> - Access to a local or remote Linux-based system on which you have administrator (root) access and can install the Singularity software.
->
-> **Please note that the version of Singularity used in this part of the course is _version 3.5.3_ which was the latest stable release at the time of writing.** If you are installing Singularity on your own system for use in the course, you are recommneded to install version 3.5.3.
+> You should have basic familiarity with using a command shell, and the lesson text will at times request that you "open a shell window", with an assumption that you know what this means.
+> Under Linux or macOS it is assumed that you will access a bash shell (usually the default), using your Terminal application.
+> Under Windows, Powershell or WSL should allow you to use the Unix instructions.
+> The lessons will sometimes request that you use a text editor to create or edit files in particular directories. It is assumed that you either have an editor that you know how to use that runs within the working directory of your shell window (e.g. nano), or that if you use a graphical editor, that you can use it to read and write files into the working directory of your shell.
 {: .prereq}
 
 {% include links.md %}

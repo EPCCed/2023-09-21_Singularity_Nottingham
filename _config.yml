@@ -110,8 +110,9 @@ episode_order:
   - singularity-docker
   - singularity-files
   - using-singularity-review
+  - singularity-blast
   - singularity-images-building
   - reproducibility
-  - singularity-mpi
+  - advanced-topics
 
 
