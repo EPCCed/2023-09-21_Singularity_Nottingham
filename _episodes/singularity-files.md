@@ -14,7 +14,7 @@ keypoints:
 - "You can specify additional host system directories to be available in the container."
 ---
 
-The way in which user accounts and access permissions are handeld in Singularity containers is very different from that in Docker (where you effectively always have superuser/root access). When running a Singularity container, you only have the same permissions to access files as the user you are running as on the host system.
+The key concept to remember when running a Singularity container, you only have the same permissions to access files as the user you are running as on the host system. (If you are familiar with Docker, you may note that this is different behaviour than you would see with that tool.)
 
 In this episode we'll look at working with files in the context of Singularity containers and how this links with Singularity's approach to users and permissions within containers.
 
@@ -31,13 +31,13 @@ jc1000
 ~~~
 {: .language-bash}
 
-But hang on! I downloaded the standard, public version of the `hello-world.sif` image from Singularity Hub. I haven't customised it in any way. How is it configured with my own user details?!
+But wait! I downloaded the standard, public version of the `hello-world.sif` container image from Singularity Hub. I haven't customised it in any way. How is it configured with my own user details?!
 
 If you have any familiarity with Linux system administration, you may be aware that in Linux, users and their Unix groups are configured in the `/etc/passwd` and `/etc/group` files respectively. In order for the shell within the container to know of my user, the relevant user information needs to be available within these files within the container.
 
 Assuming this feature is enabled within the installation of Singularity on your system, when the container is started, Singularity appends the relevant user and group lines from the host system to the `/etc/passwd` and `/etc/group` files within the container [\[1\]](https://www.intel.com/content/dam/www/public/us/en/documents/presentation/hpc-containers-singularity-advanced.pdf).
 
-This means that the host system can effectively ensure that you cannot access/modify/delete any data you should not be able to on the host system and you cannot run anything that you would not have permission to run on the host system since you are restricted to the same user permissions within the container as you are on the host system.
+This means that the host system can effectively ensure that you cannot access/modify/delete any data you should not be able to on the host system from within the container and you cannot run anything that you would not have permission to run on the host system since you are restricted to the same user permissions within the container as you are on the host system.
 
 ## Files and directories within a Singularity container
 
@@ -71,7 +71,7 @@ Host system:                                                      Singularity co
 >
 > **Q1:** What do you notice about the ownership of files in a container started from the hello-world image? (e.g. take a look at the ownership of files in the root directory (`/`))
 > 
-> **Exercise 1:** In this container, try editing (for example using the editor `vi` which should be avaiable in the container) the `/rawr.sh` file. What do you notice?
+> **Exercise 1:** In this container, try editing (for example using the editor `vi` which should be available in the container) the `/rawr.sh` file. What do you notice?
 >
 > _If you're not familiar with `vi` there are many quick reference pages online showing the main commands for using the editor, for example [this one](http://web.mit.edu/merolish/Public/vi-ref.pdf)._
 > 
@@ -91,10 +91,10 @@ Host system:                                                      Singularity co
 
 You will sometimes need to bind additional host system directories into a container you are using over and above those bound by default. For example:
 
-- There may be a shared dataset in a shard location that you need access to in the container
-- You may require executables and software libraries in the container
+- There may be a shared dataset in a location that you need access to in the container
+- You may require executables and software libraries from the host system in the container
 
-The `-B` option to the `singularity` command is used to specify additonal binds. For example, to bind the `/work/z19/shared` directory into a container you could use (note this directory is unlikely to exist on the host system you are using so you'll need to test this using a different directory):
+The `-B` option to the `singularity` command is used to specify additional binds. For example, to bind the `/work/z19/shared` directory into a container you could use (note this directory is unlikely to exist on the host system you are using so you'll need to test this using a different directory):
 
 ```
 $ singularity shell -B /work/z19/shared hello-world.sif
@@ -130,7 +130,7 @@ cdo-archer2.sif     edge768x768.pgm  image192x128.pgm	   jsindt			paraver		    p
 
 You can also specify multiple binds to `-B` by separating them by commas (`,`).
 
-You can also copy data into a container image at build time if there is some static data required in the image. We cover this later in the section on building Singularity containers.
+You can also copy data into a container image at build time if there is some static data required in the image. We cover this later in the section on building Singularity container images.
 
 ## References
 

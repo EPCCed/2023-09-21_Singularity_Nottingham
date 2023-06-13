@@ -12,11 +12,11 @@ keypoints:
 
 ## Using Docker images with Singularity
 
-Singularity can also start containers directly from Docker images, opening up access to a huge number of existing container images available on [Docker Hub](https://hub.docker.com/) and other registries.
+Singularity can also start containers directly from Docker container images, opening up access to a huge number of existing container images available on [Docker Hub](https://hub.docker.com/) and other registries.
 
-While Singularity doesn't actually run a container using the Docker image (it first converts it to a format suitable for use by Singularity), the approach used provides a seamless experience for the end user. When you direct Singularity to run a container based on pull a Docker image, Singularity pulls the slices or _layers_ that make up the Docker image and converts them into a single-file Singularity SIF image.
+While Singularity doesn't actually run a container using the Docker container image (it first converts it to a format suitable for use by Singularity), the approach used provides a seamless experience for the end user. When you direct Singularity to run a container based on a Docker container image, Singularity pulls the slices or _layers_ that make up the Docker container image and converts them into a single-file Singularity SIF container image.
 
-For example, moving on from the simple _Hello World_ examples that we've looked at so far, let's pull one of the [official Docker Python images](https://hub.docker.com/_/python). We'll use the image with the tag `3.9.6-slim-buster` which has Python 3.9.6 installed on Debian's [Buster](https://www.debian.org/releases/buster/) (v10) Linux distribution:
+For example, moving on from the simple _Hello World_ examples that we've looked at so far, let's pull one of the [official Docker Python container images](https://hub.docker.com/_/python). We'll use the image with the tag `3.9.6-slim-buster` which has Python 3.9.6 installed on Debian's [Buster](https://www.debian.org/releases/buster/) (v10) Linux distribution:
 
 ~~~
 $ singularity pull python-3.9.6.sif docker://python:3.9.6-slim-buster
@@ -44,13 +44,13 @@ INFO:    Creating SIF file...
 ~~~
 {: .output}
 
-Note how we see singularity saying that it's "_Converting OCI blobs to SIF format_". We then see the layers of the Docker image being downloaded and unpacked and written into a single SIF file. Once the process is complete, we should see the python-3.9.6.sif image file in the current directory.
+Note how we see Singularity saying that it's "_Converting OCI blobs to SIF format_". We then see the layers of the Docker container image being downloaded and unpacked and written into a single SIF file. Once the process is complete, we should see the python-3.9.6.sif container image file in the current directory.
 
-We can now run a container from this image as we would with any other singularity image.
+We can now run a container from this container image as we would with any other Singularity container image.
 
 > ## Running the Python 3.9.6 image that we just pulled from Docker Hub
 >
-> Try running the Python 3.9.6 image. What happens?
+> Try running the Python 3.9.6 container image. What happens?
 > 
 > Try running some simple Python statements...
 > 
@@ -84,14 +84,14 @@ In addition to running a container and having it run the default run script, you
 
 > ## Open a shell within a Python container
 >
-> Try to run a shell within a singularity container based on the `python-3.9.6.sif` image. That is, run a container that opens a shell rather than the default Python interactive console as we saw above.
+> Try to run a shell within a singularity container based on the `python-3.9.6.sif` container image. That is, run a container that opens a shell rather than the default Python interactive console as we saw above.
 > See if you can find more than one way to achieve this.
 > 
 > Within the shell, try starting the Python interactive console and running some Python commands.
 > 
 > > ## Solution
 > >
-> > Recall from the earlier material that we can use the `singularity shell` command to open a shell within a container. To open a regular shell within a container based on the `python-3.9.6.sif` image, we can therefore simply run:
+> > Recall from the earlier material that we can use the `singularity shell` command to open a shell within a container. To open a regular shell within a container based on the `python-3.9.6.sif` container image, we can therefore simply run:
 > > ~~~
 > > $ singularity shell python-3.9.6.sif
 > > ~~~
@@ -133,7 +133,6 @@ In addition to running a container and having it run the default run script, you
 > {: .solution}
 {: .challenge}
 
-This concludes the fifth episode and Part I of the Singularity material. Part II contains a further three episodes where we'll look at creating your own images and then more advanced use of containers for running MPI parallel applications.
 
 ## References
 
