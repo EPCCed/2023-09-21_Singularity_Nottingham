@@ -35,7 +35,7 @@ Note that the use of `singularity exec` has overriden any run script set within 
 
 > ## Basic exercise: Running a different command within the "hello-world" container
 >
-> Can you run a container based on the `hello-world.sif` image that **prints the current date and time**?
+> Can you run a container based on the `hello-world.sif` image that *prints the current date and time*?
 > 
 > > ## Solution
 > >
@@ -51,15 +51,15 @@ Note that the use of `singularity exec` has overriden any run script set within 
 > {: .solution}
 {: .challenge}
 
-<br/>
-#### **The difference between `singularity run` and `singularity exec`**
 
-Above we used the `singularity exec` command. In earlier episodes of this
+### Difference between `singularity run` and `singularity exec`
+
+Above, we used the `singularity exec` command. In earlier episodes of this
 course we used `singularity run`. To clarify, the difference between these
 two commands is:
 
  - `singularity run`: This will run the default command set for containers
-   based on the specfied image. This default command is set within
+   based on the specified image. This default command is set within
    the image metadata when the image is built (we'll see more about this
    in later episodes). You do not specify a command to run when using
    `singularity run`, you simply specify the image file name. As we saw 
@@ -91,13 +91,6 @@ Singularity>
 {: .output}
 
 As shown above, we have opened a shell in a new container started from the `hello-world.sif` image. Note that the shell prompt has changed to show we are now within the Singularity container.
-
-> ## Discussion: Running a shell inside a Singularity container
->
-> Q: What do you notice about the output of the above commands entered within the Singularity container shell?
-> 
-> Q: Does this differ from what you might see within a Docker container?
-{: .discussion}
 
 Use the `exit` command to exit from the container shell.
 

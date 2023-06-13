@@ -105,9 +105,9 @@ remote_theme: carpentries/carpentries-theme@main
 episode_order:
   - introduction
   - singularity-gettingstarted
-  - singularity-cache
   - singularity-shell
   - singularity-docker
+  - singularity-cache
   - singularity-files
   - using-singularity-review
   - singularity-blast
