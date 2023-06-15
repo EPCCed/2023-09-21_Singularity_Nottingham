@@ -19,4 +19,14 @@ This lesson will introduce Singularity from scratch showing you how to run a sim
 > The lessons will sometimes request that you use a text editor to create or edit files in particular directories. It is assumed that you either have an editor that you know how to use that runs within the working directory of your shell window (e.g. nano), or that if you use a graphical editor, that you can use it to read and write files into the working directory of your shell.
 {: .prereq}
 
+## Course details
+
+ - Dates:
+   + 1400-1630, Wed 21 June 2023
+   + 1000-1600, Thu 22 June 2023
+ - Location:
+   + TBC, Radboud UMC, Nijmagen, NL
+ - Instructor: Andy Turner, EPCC, University of Edinburgh, UK
+
+
 {% include links.md %}
