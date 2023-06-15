@@ -111,7 +111,8 @@ episode_order:
   - singularity-files
   - using-singularity-review
   - singularity-blast
-  - singularity-images-building
+  - creating-container-images
+  - advanced-containers
   - reproducibility
   - advanced-topics
 
