@@ -29,7 +29,7 @@ provides the BLAST+ software.
 > build a container image with the `efetch` tool available later in the course.)
 {: .callout}
 
-## Download the required data
+## Download the required data
 
 Download the [blast_example.tar.gz]({{ page.root }}/files/blast_example.tar.gz).
 
@@ -144,14 +144,41 @@ singularity exec ncbi-blast.sif \
     -taxid 7801 -blastdb_version 5
 ~~~
 {: .language-bash}
+~~~
 
-> ## 
+Building a new DB, current time: 06/16/2023 14:35:07
+New DB name:   /home/auser/test/blast/blast/nurse-shark-proteins
+New DB title:  Nurse shark proteins
+Sequence type: Protein
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 7 sequences in 0.0199499 seconds.
+
+~~~
+{: .output}
+
+To verify the newly created BLAST database above, you can run the
+`blastdbcmd -entry all -db nurse-shark-proteins -outfmt "%a %l %T"` command to display
+the accessions, sequence length, and common name of the sequences in the database.
 
 ~~~
 singularity exec ncbi-blast.sif \
     blastdbcmd -entry all -db nurse-shark-proteins -outfmt "%a %l %T"
 ~~~
 {: .language-bash}
+
+~~~
+Q90523.1 106 7801
+P80049.1 132 7801
+P83981.1 53 7801
+P83977.1 95 7801
+P83984.1 190 7801
+P83985.1 195 7801
+P27950.1 151 7801
+~~~
+{: .output}
+
+Now we have our database we can runqueries against it.
 
 ## Run a query against the BLAST database
 
@@ -161,4 +188,6 @@ singularity exec ncbi-blast.sif \
     -out results/blastp.out
 ~~~
 {: .language-bash}
+
+After we have run this command, we can check the results in the `resuls/blastp.out` file.
 
