@@ -3,11 +3,12 @@ title: "Using Singularity to run BLAST+"
 teaching: 15
 exercises: 30
 questions:
-- "How can I use Singularity to run BLAST+?"
+- "How can I use Singularity to run bioinformatics workflows with BLAST+?"
 objectives:
 - "Show example of using Singularity with a common bioinformatics tool."
 keypoints:
-- "TBC"
+- "We can use containers to run software without having to install it"
+- "The commands we use are very similar to those we would use natively"
 ---
 
 We have now learned enough to be able to use Sigularity to deploy software without us
@@ -180,7 +181,9 @@ P27950.1 151 7801
 
 Now we have our database we can runqueries against it.
 
-## Run a query against the BLAST database
+## Run a query against the BLAST database
+
+Lets execute a query on our database using the `blastp` command:
 
 ~~~
 singularity exec ncbi-blast.sif \
@@ -189,5 +192,39 @@ singularity exec ncbi-blast.sif \
 ~~~
 {: .language-bash}
 
-After we have run this command, we can check the results in the `resuls/blastp.out` file.
+At this point, you should see the results of the query in the output file `results/blastp.out`.
+To view the content of this output file, use the command `less results/blastp.out`.
+
+~~~
+less results/blastp.out
+~~~
+{: .language-bash}
+
+~~~
+Query= sp|P01349.2|RELX_CARTA RecName: Full=Relaxin; Contains: RecName:
+Full=Relaxin B chain; Contains: RecName: Full=Relaxin A chain
+
+Length=44
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+P80049.1 RecName: Full=Fatty acid-binding protein, liver; AltName...  14.2    0.96
+
+
+>P80049.1 RecName: Full=Fatty acid-binding protein, liver; AltName: Full=Liver-type
+fatty acid-binding protein; Short=L-FABP
+Length=132
+~~~
+{: .output}
+
+With your query, BLAST identified the protein sequence P80049.1 as a match with a score of 14.2 and an E-value of 0.96. 
+
+You have now completed a simpleexample of using a complex piece of bioinformatics software
+through Singularity containers. You may have noticed that some things just worked without
+you needing to set them up even though you were running in containers:
+
+1. Automatic mounts
+2. Access to the internet
+3. Files with the right ownership/permissions
+
 
