@@ -31,15 +31,7 @@ provides the BLAST+ software.
 
 ## Download the required data
 
-Download the [blast_example.tar.gz]({{ page.root }}/files/blast_example.tar.gz), e.g.:
-
-~~~
-wget {{ page.root }}/files/blast_example.tar.gz
-~~~
-{: .language-bash}
-~~~
-~~~
-{: .output}
+Download the [blast_example.tar.gz]({{ page.root }}/files/blast_example.tar.gz).
 
 Unpack the archive:
 
@@ -48,6 +40,14 @@ tar -xvf blast_example.tar.gz
 ~~~
 {: .language-bash}
 ~~~
+x blast/
+x blast/blastdb/
+x blast/queries/
+x blast/fasta/
+x blast/results/
+x blast/blastdb_custom/
+x blast/fasta/nurse-shark-proteins.fsa
+x blast/queries/P01349.fsa
 ~~~
 {: .output}
 
@@ -59,6 +59,7 @@ ls
 ~~~
 {: .language-bash}
 ~~~
+blastdb        blastdb_custom fasta          queries        results
 ~~~
 {: .output}
 
@@ -69,14 +70,72 @@ NCBI provide official Docker containers with the BLAST+ software. We can create
 a Singularity container image from the Docker container image with:
 
 ~~~
-singularity build ncbi-blast.sif docker://ncbi/blast
+singularity pull ncbi-blast.sif docker://ncbi/blast
 ~~~
 {: .language-bash}
 ~~~
+INFO:    Converting OCI blobs to SIF format
+INFO:    Starting build...
+Getting image source signatures
+Copying blob f3b81f6693c5 done  
+Copying blob 9e3ea8720c6d done  
+Copying blob f1910abb61ed done  
+Copying blob 5ac33d4de47b done  
+Copying blob 8402427c8382 done  
+Copying blob 06add1a477bc done  
+Copying blob d9781f222125 done  
+Copying blob 4aae31cc8a8b done  
+Copying blob 6a61413c1ffa done  
+Copying blob c657bf8fc6ca done  
+Copying blob 1776e565f5f8 done  
+Copying blob d90474a0d8c8 done  
+Copying blob 0bc89cb1b9d7 done  
+Copying blob b8a272fccf13 done  
+Copying blob 891eb09f891f done  
+Copying blob 4c64befa8a35 done  
+Copying blob 7ab0b7afbc21 done  
+Copying blob b007c620c60b done  
+Copying blob f877ffc04713 done  
+Copying blob 6ee97c348001 done  
+Copying blob 03f0ee97190b done  
+Copying config 28914b3519 done  
+Writing manifest to image destination
+Storing signatures
+2023/06/16 08:26:53  info unpack layer: sha256:9e3ea8720c6de96cc9ad544dddc695a3ab73f5581c5d954e0504cc4f80fb5e5c
+2023/06/16 08:26:53  info unpack layer: sha256:06add1a477bcffec8bac0529923aa8ae25d51f0660f0c8ef658e66aa89ac82c2
+2023/06/16 08:26:53  info unpack layer: sha256:f3b81f6693c592ab94c8ebff2109dc60464d7220578331c39972407ef7b9e5ec
+2023/06/16 08:26:53  info unpack layer: sha256:5ac33d4de47beb37ae35e9cad976d27afa514ab8cbc66e0e60c828a98e7531f4
+2023/06/16 08:27:03  info unpack layer: sha256:8402427c8382ab723ac504155561fb6d3e5ea1e7b4f3deac8449cec9e44ae65a
+2023/06/16 08:27:03  info unpack layer: sha256:f1910abb61edef8947e9b5556ec756fd989fa13f329ac503417728bf3b0bae5e
+2023/06/16 08:27:03  info unpack layer: sha256:d9781f222125b5ad192d0df0b59570f75b797b2ab1dc0d82064c1b6cead04840
+2023/06/16 08:27:03  info unpack layer: sha256:4aae31cc8a8b726dce085e4e2dc4671a9be28162b8d4e1b1c00b8754f14e6fe6
+2023/06/16 08:27:03  info unpack layer: sha256:6a61413c1ffa309d92931265a5b0ecc9448568f13ccf3920e16aaacc8fdfc671
+2023/06/16 08:27:03  info unpack layer: sha256:c657bf8fc6cae341e3835cb101dc4c6839ba4aad69578ff8538b3c1eba7abb21
+2023/06/16 08:27:04  info unpack layer: sha256:1776e565f5f85562b8601edfd29c35f3fba76eb53177c8e89105f709387e3627
+2023/06/16 08:27:04  info unpack layer: sha256:d90474a0d8c8e6165d909cc0ebbf97dbe70fd759a93eff11a5a3f91fa09a470e
+2023/06/16 08:27:04  warn rootless{root/edirect/aux/lib/perl5/Mozilla/CA/cacert.pem} ignoring (usually) harmless EPERM on setxattr "user.rootlesscontainers"
+2023/06/16 08:27:04  warn rootless{root/edirect/aux/lib/perl5/Mozilla/CA.pm} ignoring (usually) harmless EPERM on setxattr "user.rootlesscontainers"
+2023/06/16 08:27:04  warn rootless{root/edirect/aux/lib/perl5/Mozilla/mk-ca-bundle.pl} ignoring (usually) harmless EPERM on setxattr "user.rootlesscontainers"
+2023/06/16 08:27:04  info unpack layer: sha256:0bc89cb1b9d7ca198a7a1b95258006560feffaff858509be8eb7388b315b9cf5
+2023/06/16 08:27:04  info unpack layer: sha256:b8a272fccf13b721fa68826f17f0c2bb395de377e0d22c98d38748eb5957a4c6
+2023/06/16 08:27:04  info unpack layer: sha256:891eb09f891ff2c26f24a5466112e134f6fb30bd3d0e78c14c0d676b0e68d60a
+2023/06/16 08:27:04  info unpack layer: sha256:4c64befa8a35c9f8518324524dfc27966753462a4c07b2234811865387058bf4
+2023/06/16 08:27:04  info unpack layer: sha256:7ab0b7afbc21b75697a7b8ed907ee9b81e5b17a04895dc6ff7d25ea2ba1eeba4
+2023/06/16 08:27:04  info unpack layer: sha256:b007c620c60b91ce6a9e76584ecc4bc062c822822c204d8c2b1c8668193d44d1
+2023/06/16 08:27:04  info unpack layer: sha256:f877ffc04713a03dffd995f540ee13b65f426b350cdc8c5f1e20c290de129571
+2023/06/16 08:27:04  info unpack layer: sha256:6ee97c348001fca7c98e56f02b787ce5e91d8cc7af7c7f96810a9ecf4a833504
+2023/06/16 08:27:04  info unpack layer: sha256:03f0ee97190baebded2f82136bad72239254175c567b19def105b755247b0193
+INFO:    Creating SIF file...
 ~~~
 {: .output}
 
+Now we have a container with the software in, we can use it.
+
 ## Build and verify the BLAST database
+
+Our example dataset has already downloaded the query and database sequences. We first
+use these downloaded data to create a custom BLAST database by using a container to run
+the command `makeblastdb` with the correct options.
 
 ~~~
 singularity exec ncbi-blast.sif \
@@ -85,6 +144,8 @@ singularity exec ncbi-blast.sif \
     -taxid 7801 -blastdb_version 5
 ~~~
 {: .language-bash}
+
+> ## 
 
 ~~~
 singularity exec ncbi-blast.sif \
