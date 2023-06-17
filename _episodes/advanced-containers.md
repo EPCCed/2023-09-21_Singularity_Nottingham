@@ -95,7 +95,7 @@ sum = 0
 > > The Singularity command to run the container interactively is:
 > > ~~~
 > > singularity shell alpine-python.sif
-> > python3 sum.py 10 12 10
+> > Singularity> python3 sum.py 10 12 10
 > > ~~~
 > > {: .language-bash}
 > >
