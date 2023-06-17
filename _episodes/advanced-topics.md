@@ -16,8 +16,8 @@ keypoints:
 ## Additional topics
 
 - How do containers work
-  + Containers vs Virtual Machines
-  + Layers
+  + [Containers vs Virtual Machines](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/containers-vs-vm)
+  + [Layers](https://docs.docker.com/storage/storagedriver/)
 - Container technologies
   + Docker
   + Others: Podman, Sarus, OCI
