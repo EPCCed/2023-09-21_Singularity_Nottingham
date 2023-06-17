@@ -33,7 +33,7 @@ You can also obtain container images from the vast store of Docker container ima
 singularity pull python-slim-3.9.6.sif docker://python:3.9.6-slim-buster
 ~~~
 
-## The Singularity container image cache
+## The Singularity container image cache
 
 As well as storing the downloaded container image files in the file name specified, Singularity stores them in a local cache to avoid additional downloads. You can inspect the contents of the cache with
 
