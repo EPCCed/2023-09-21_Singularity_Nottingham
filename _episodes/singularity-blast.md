@@ -1,6 +1,6 @@
 ---
 title: "Using Singularity to run BLAST+"
-teaching: 15
+teaching: 30
 exercises: 30
 questions:
 - "How can I use Singularity to run bioinformatics workflows with BLAST+?"
@@ -9,6 +9,7 @@ objectives:
 keypoints:
 - "We can use containers to run software without having to install it"
 - "The commands we use are very similar to those we would use natively"
+- "Singularity handles a lot of complexity around data and internet access for us"
 ---
 
 We have now learned enough to be able to use Sigularity to deploy software without us
