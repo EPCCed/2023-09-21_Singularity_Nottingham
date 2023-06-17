@@ -48,7 +48,7 @@ Now, start a shell in a container based on the new container image:
 ~~~
 singularity shell alpine.sif
 ~~~
-{: .language-bash
+{: .language-bash}
 
 Because this is a basic container, there's a lot of things not installed -- for
 example, `python3`.
@@ -91,7 +91,7 @@ in the container image and track changes to this process over time and/or versio
 of the container image.
 
 > ## Writable container images
-> >
+>
 > There is a way to create an image in a way that can be written to
 > but it is a bit convoluted and not as useful as you might first expect; due, in a large
 > part to the reproducibility issues discussed above. To be able to install
@@ -128,6 +128,7 @@ of the container image.
 > This approach can be useful for exploring the install commands to use to create
 > your container images but it is not generally a good way to create reproducible
 > container images.
+{: .callout}
 
 ## Put installation instructions in a Singularity recipe file
 
