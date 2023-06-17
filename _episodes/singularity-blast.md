@@ -34,7 +34,7 @@ provides the BLAST+ software.
 
 Download the [blast_example.tar.gz]({{ page.root }}/files/blast_example.tar.gz).
 
-Unpack the archive:
+Unpack the archive which contains the downloaded data required for the BLAST+ example:
 
 ~~~
 tar -xvf blast_example.tar.gz
@@ -56,7 +56,7 @@ Finally, move into the newly created directory:
 
 ~~~
 cd blast
-ls
+ls  
 ~~~
 {: .language-bash}
 ~~~
@@ -64,10 +64,9 @@ blastdb        blastdb_custom fasta          queries        results
 ~~~
 {: .output}
 
-
 ## Create the Singularity container image
 
-NCBI provide official Docker containers with the BLAST+ software. We can create
+NCBI provide official Docker containers with the BLAST+ software hosted on Docker Hub. We can create
 a Singularity container image from the Docker container image with:
 
 ~~~
@@ -179,7 +178,7 @@ P27950.1 151 7801
 ~~~
 {: .output}
 
-Now we have our database we can runqueries against it.
+Now we have our database we can run queries against it.
 
 ## Run a query against the BLAST database
 
@@ -201,6 +200,8 @@ less results/blastp.out
 {: .language-bash}
 
 ~~~
+...output trimmed...
+
 Query= sp|P01349.2|RELX_CARTA RecName: Full=Relaxin; Contains: RecName:
 Full=Relaxin B chain; Contains: RecName: Full=Relaxin A chain
 
@@ -214,17 +215,84 @@ P80049.1 RecName: Full=Fatty acid-binding protein, liver; AltName...  14.2    0.
 >P80049.1 RecName: Full=Fatty acid-binding protein, liver; AltName: Full=Liver-type
 fatty acid-binding protein; Short=L-FABP
 Length=132
+
+...output trimmed...
 ~~~
 {: .output}
 
-With your query, BLAST identified the protein sequence P80049.1 as a match with a score of 14.2 and an E-value of 0.96. 
+With your query, BLAST identified the protein sequence P80049.1 as a match with a score
+of 14.2 and an E-value of 0.96.
 
-You have now completed a simpleexample of using a complex piece of bioinformatics software
+## Accessing online BLAST databases
+
+As well as building your own local database to query, you can also access databases that are
+available online. For example, to see which databases are available online in the Google Compute
+Platform (GCP):
+
+~~~
+singularity exec ncbi-blast.sif update_blastdb.pl --showall pretty --source gcp
+~~~
+{: .language-bash}
+
+~~~
+Connected to GCP
+BLASTDB                                                      DESCRIPTION                                                                                                              SIZE (GB)      LAST_UPDATED
+nr                                                           All non-redundant GenBank CDS translations+PDB+SwissProt+PIR+PRF excluding environmental samples from WGS projects        369.4824      2023-06-10
+swissprot                                                    Non-redundant UniProtKB/SwissProt sequences                                                                                 0.3576      2023-06-10
+refseq_protein                                               NCBI Protein Reference Sequences                                                                                          146.5088      2023-06-12
+landmark                                                     Landmark database for SmartBLAST                                                                                            0.3817      2023-04-25
+pdbaa                                                        PDB protein database                                                                                                        0.1967      2023-06-10
+nt                                                           Nucleotide collection (nt)                                                                                                319.5044      2023-06-11
+pdbnt                                                        PDB nucleotide database                                                                                                     0.0145      2023-06-09
+patnt                                                        Nucleotide sequences derived from the Patent division of GenBank                                                           15.7342      2023-06-09
+refseq_rna                                                   NCBI Transcript Reference Sequences                                                                                        47.8721      2023-06-12
+
+...output trimmed...
+~~~
+{: .output}
+
+Similarly, for databases hosted at NCBI:
+
+~~~
+singularity exec ncbi-blast.sif update_blastdb.pl --showall pretty --source ncbi
+~~~
+{: .language-bash}
+
+~~~
+Connected to NCBI
+BLASTDB                                                      DESCRIPTION                                                                                                              SIZE (GB)      LAST_UPDATED
+env_nr                                                       Proteins from WGS metagenomic projects (env_nr).                                                                            3.9459      2023-06-11
+SSU_eukaryote_rRNA                                           Small subunit ribosomal nucleic acid for Eukaryotes                                                                         0.0063      2022-12-05
+LSU_prokaryote_rRNA                                          Large subunit ribosomal nucleic acid for Prokaryotes                                                                        0.0041      2022-12-05
+16S_ribosomal_RNA                                            16S ribosomal RNA (Bacteria and Archaea type strains)                                                                       0.0178      2023-06-16
+env_nt                                                       environmental samples                                                                                                      48.8599      2023-06-08
+LSU_eukaryote_rRNA                                           Large subunit ribosomal nucleic acid for Eukaryotes                                                                         0.0053      2022-12-05
+ITS_RefSeq_Fungi                                             Internal transcribed spacer region (ITS) from Fungi type and reference material                                             0.0067      2022-10-28
+Betacoronavirus                                              Betacoronavirus                                                                                                            55.3705      2023-06-16
+
+...output trimmed...
+~~~
+{: .output}
+
+## Notes
+
+You have now completed a simple example of using a complex piece of bioinformatics software
 through Singularity containers. You may have noticed that some things just worked without
-you needing to set them up even though you were running in containers:
+you needing to set them up even though you were running using containers:
 
-1. Automatic mounts
-2. Access to the internet
-3. Files with the right ownership/permissions
+1. We did not need to explicitly bind any files/directories in to the container. This worked
+   because Singularity automatically binds the current directory into the running container, so
+   any data in the current directory (or its subdirectories) will generally be available in
+   running Singularity containers. (If you have used Docker containers, you will notice that
+   this is different from the defalt behaviour there.)
+2. Access to the internet is automatically available within the running container in the same
+   way as it is on the host system without us needed to specify any additional options.
+4. Files and data we create within the container have the right ownership and permissions for
+   us to access outside the container.
+
+In addtion, we were able to use the tools in the container image provided by NCBI without having
+to do any work to install the software irrespecetive of the computing platform that we are using.
+(In fact, the example this is based on runs the pipeline using Docker on a cloud computing platform
+rather than on your local systeam.)
 
 
