@@ -1,15 +1,32 @@
 ---
-title: "Advanced topics"
+title: "Additional topics and next steps"
 teaching: 60
 exercises: 0
 questions:
 - "How do I understand more on how containers work?"
+- "What different container technologies are there and what are differences/implications?"
+- "How can I orchestrate different containers?"
 objectives:
-- "Understand layers better."
-- "TBC"
+- "Understand container technologies better."
+- "Provide useful links to continue your journey with containers."
 keypoints:
 - "TBC"
 ---
 
-Content to be added
+## Additional topics
+
+- How do containers work
+  + Containers vs Virtual Machines
+  + Layers
+- Container technologies
+  + Docker
+  + Others: Podman, Sarus, OCI
+- Container orchestration
+
+## Useful links
+
+- Docker Intro
+- Singularity docs
+- Apptainer docs
+
 
