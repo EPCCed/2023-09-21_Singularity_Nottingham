@@ -1,7 +1,7 @@
 ---
 title: "Containers in Research Workflows: Reproducibility and Granularity"
-teaching: 20
-exercises: 0
+teaching: 25
+exercises: 15
 questions:
 - "How can I use container images to make my research more reproducible?"
 - "How do I incorporate containers into my research workflow?"
@@ -15,11 +15,13 @@ keypoints:
 ---
 
 Although this workshop is titled "Reproducible computational environments using containers",
-so far we have mostly covered the mechanics of using Docker with only passing reference to
+so far we have mostly covered the mechanics of using Singularity with only passing reference to
 the reproducibility aspects. In this section, we discuss these aspects in more detail.
 
 > ## Work in progress...
-> Note that reproducibility aspects of software and containers are an active area of research, discussion and development so are subject to many changes. We will present some ideas and approaches here but best practices will likely evolve in the near future.
+> Note that reproducibility aspects of software and containers are an active area of research,
+> discussion and development so are subject to many changes. We will present some ideas and
+> approaches here but best practices will likely evolve in the near future.
 {: .callout}
 
 ## Reproducibility
@@ -36,39 +38,35 @@ Some examples of why containers are an attractive technology to help with reprod
   - You can save the exact versions of software and their dependencies in the container image.
   - You can access legacy versions of software and underlying dependencies which may not be generally available any more.
   - Depending on their size, you can also potentially store a copy of key data within the container image.
-  - You can archive and share the container image as well as associating a persistent identifier with a container image to allow other researchers to reproduce and build on your work.
+  - You can archive and share the container image as well as associating a persistent identifier with a container image
+    to allow other researchers to reproduce and build on your work.
 
 ## Sharing images
 
-As we have already seen, the Docker Hub provides a platform for sharing container images publicly. Once you have uploaded a container image, you can point people to its public location and they can download and build upon it.
+We have made use of a few different online repositories during this course, such as [Sylabs Cloud Library](https://cloud.sylabs.io/library) and [Docker Hub](https://hub.docker.com) which provide platforms for sharing container images publicly. Once you have uploaded a container image, you can point people to its public location and they can download and build upon it.
 
-This is fine for working collaboratively with container images on a day-to-day basis but the Docker Hub is not a good option for long time archive of container images in support of research and publications as:
+This is fine for working collaboratively with container images on a day-to-day basis but these repositories are not a good option for long time archive of container images in support of research and publications as:
 
   - free accounts have a limit on how long a container image will be hosted if it is not updated
   - it does not support adding persistent identifiers to container images
-  - it is easy to overwrite tagged container images with newer versions by mistake.
+  - it is easy to overwrite container images with newer versions by mistake.
 
 ## Archiving and persistently identifying container images using Zenodo
 
 When you publish your work or make it publicly available in some way it is good practice to make container images that you used for computational work available in an immutable, persistent way and to have an identifier that allows people to cite and give you credit for the work you have done. [Zenodo](https://zenodo.org/) is one service that provides this functionality.
 
-Zenodo supports the upload of *tar* archives and we can capture our Docker container images as tar archives using the `docker image save` command. For example, to export the container image we created earlier in this lesson:
+Zenodo supports the upload of *zip* archives and we can capture our Singularity container images as zip archives. For example, to convert the container image we created earlier, `alpine-sum.sif` in this lesson to a zip archive (on the command line):
 
 ~~~
-docker image save alice/alpine-python:v1 -o alpine-python.tar
+zip alpine-sum.zip alpine-sum.sif
 ~~~
 {: .bash}
 
-These tar container images can become quite large and Zenodo supports uploads up to 50GB so you may need to compress your archive to make it fit on Zenodo using a tool such as gzip (or zip):
-
-~~~
-gzip alpine-python.tar
-~~~
-{: .bash}
+Note: These zip container images can become quite large and Zenodo supports uploads up to 50GB. If your container image is too large, you may need to look at other options to archive them or work to reduce the size of the container images.
 
 Once you have your archive, you can [deposit it on Zenodo](https://zenodo.org/deposit/) and this will:
 
-   - Create a long-term archive snapshot of your Docker container image which people (including your future self) can download and reuse or reproduce your work.
+   - Create a long-term archive snapshot of your Singularity container image which people (including your future self) can download and reuse or reproduce your work.
    - Create a persistent DOI (*Digital Object Identifier*) that you can cite in any publications or outputs to enable reproducibility and recognition of your work.
 
 In addition to the archive file itself, the deposit process will ask you to provide some basic metadata to classify the container image and the associated work.
@@ -129,9 +127,9 @@ Of course, many real applications will sit somewhere between these two extremes.
 > Now that we're at the end of the lesson material, take a moment to reflect on
 > what you've learned, how it applies to you, and what to do next.
 >
-> 1. In your own notes, write down or diagram your understanding of Docker containers and container images:
+> 1. In your own notes, write down or diagram your understanding of Singularity containers and container images:
 > concepts, commands, and how they work.
-> 2. In the workshop's shared notes document, write down how you think you might
+> 2. In your own notes, write down how you think you might
 > use containers in your daily work. If there's something you want to try doing with
 > containers right away, what is a next step after this workshop to make that happen?
 >
