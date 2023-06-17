@@ -36,10 +36,10 @@ contents
 
 import sys
 try:
-    total = sum(int(arg) for arg in sys.argv[1:])
-    print('sum =', total)
+   total = sum(int(arg) for arg in sys.argv[1:]
+   print('sum =', total)
 except ValueError:
-    print('Please supply integer arguments')
+   print('Please supply integer arguments')
 ~~~
 {: .language-python}
 
@@ -47,6 +47,16 @@ except ValueError:
 > ## Running containers
 >
 > What command would we use to run Python 3 from the `alpine-python` container?
+>
+> > ## Solution
+> >
+> > We would use:
+> >
+> > ~~~
+> > singularity exec alpine-python.sif python3
+> > ~~~
+> > {: .language-bash}
+> {: .solution}
 {: .challenge}
 
 If we try running the container and Python script, what happens?
@@ -56,87 +66,14 @@ singularity exec alpine-python.sif python3 sum.py
 ~~~
 {: .language-bash}
 ~~~
-TBC
+sum = 0
 ~~~
 {: .output}
 
-[This may just work with Singularity...]
-
-> ## No such file or directory
->
-> What does the error message mean? Why might the Python inside the container
-> not be able to find or open our script?
->
-{: .challenge}
-
-Remember that the container and its filesystem is separate from our
-host computer's filesystem. When the container runs, it can't see anything outside
-itself, including any of the files on our computer. In order to use Python
-(inside the container) and our script (outside the container, on our host computer),
-we need to create a link between the directory on our computer and the container.
-
-As covered earlier, we can bind files/directories from the host into the running 
-container with the `-B` flag. If we want to bind in the current host working directory
-to the location `/temp/python` we can add the `-B ${PWD}:/temp/python` option.
-
-What this means is: make my current working directory (on the host computer) -- the source --
-_visible_ within the container that is about to be started, and inside this container, name the
-directory `/temp/python` -- the target.
-
-<!--
-
-Let's try running the command now:
-~~~
-$ Singularity container run --mount type=bind,source=${PWD},target=/temp alice/alpine-python python3 sum.py
-~~~
-{: .language-bash}
-
-But we get the same error!
-~~~
-python3: can't open file 'sum.py': [Errno 2] No such file or directory
-~~~
-{: .output}
-
-This final piece is a bit tricky -- we really have to remember to put ourselves
-inside the container. Where is the `sum.py` file? It's in the directory that's been
-mapped to `/temp` -- so we need to include that in the path to the script. This
-command should give us what we need:
-
-~~~
-$ Singularity container run --mount type=bind,source=${PWD},target=/temp alice/alpine-python python3 /temp/sum.py
-~~~
-{: .language-bash}
-
-Note that if we create any files in the `/temp` directory while the container is
-running, these files will appear on our host filesystem in the original directory
-and will stay there even when the container stops.
-
-> ## Other Commonly Used Singularity Run Flags
->
-> Singularity run has many other useful flags to alter its function.
-> A couple that are commonly used include `-w` and `-u`.
-> 
-> The `--workdir`/`-w` flag sets the working directory a.k.a. runs the command 
-> being executed inside the directory specified.
-> For example, the following code would run the `pwd` command in a container
-> started from the latest ubuntu image in the `/home/alice` directory and print
-> `/home/alice`.  If the directory doesn't exist in the image it will create it.
->
-> ~~~
-> Singularity container run -w /home/alice/ ubuntu pwd
-> ~~~
->
-> The `--user`/`-u` flag lets you specify the username you would like to run the
-> container as.  This is helpful if you'd like to write files to a mounted folder
-> and not write them as `root` but rather your own user identity and group. 
-> A common example of the `-u` flag is `--user $(id -u):$(id -g)` which will
-> fetch the current user's ID and group and run the container as that user.
-> 
-{: .callout}
 
 > ## Exercise: Explore the script
 >
-> What happens if you use the `Singularity container run` command above
+> What happens if you use the `singularity exec` command above
 > and put numbers after the script name?
 >
 > > ## Solution
@@ -147,55 +84,35 @@ and will stay there even when the container stops.
 > {: .solution}
 {: .challenge}
 
-> ## Exercise: Checking the options
+> ## Exercise: Interactive use
 >
-> Our Singularity command has gotten much longer! Can you go through each piece of
-> the Singularity command above and explain what it does? How would you characterize
-> the key components of a Singularity command?
->
-> > ## Solution
-> >
-> > Here's a breakdown of each piece of the command above
-> >
-> > - `Singularity container run`: use Singularity to run a container
-> > - `--mount type=bind,source=${PWD},target=/temp`: connect my current working directory (`${PWD}`) as a folder
-> > inside the container called `/temp`
-> > - `alice/alpine-python`: name of the container image to use to run the container
-> > - `python3 /temp/sum.py`: what commands to run in the container
-> >
-> > More generally, every Singularity command will have the form:
-> > `Singularity [action] [Singularity options] [Singularity container image] [command to run inside]`
-> >
-> {: .solution}
-{: .challenge}
-
-> ## Exercise: Interactive jobs
->
-> Try using the directory mount option but run the container interactively.
-> Can you find the folder that's connected to your host computer? What's inside?
+> We can also use the script interactively within the running container. What commands would
+> you use to run the `sum.py` script interactively in a container based on the `alpine-python.sif`
+> container image.
 >
 > > ## Solution
 > >
 > > The Singularity command to run the container interactively is:
 > > ~~~
-> > $ Singularity container run --mount type=bind,source=${PWD},target=/temp -it alice/alpine-python sh
+> > singularity shell alpine-python.sif
+> > python3 sum.py 10 12 10
 > > ~~~
 > > {: .language-bash}
 > >
-> > Once inside, you should be able to navigate to the `/temp` folder
-> > and see that's contents are the same as the files on your host computer:
 > > ~~~
-> > /# cd /temp
-> > /# ls
+> > sum = 32
 > > ~~~
-> > {: .language-bash}
+> > {: .output}
 > {: .solution}
 {: .challenge}
 
-Mounting a directory can be very useful when you want to run the software inside your container on many different input files.
-In other situations, you may want to save or archive an authoritative version of your data by adding it to the container image permanently.  That's what we will cover next.
+This all works without any further options because Singualrity binds the current directory into the
+running container by default. If the `sum.py` was in a directory other than the current directory 
+(or its subdirectories) then you would need to bind it into the running container explicitly using
+the `-B` option as described earlier in the course.
 
--->
+In other situations, you may want to save or archive an authoritative version of your data by adding
+it to the container image permanently. That's what we will cover next.
 
 ## Including your scripts and data within a container image
 
@@ -210,7 +127,7 @@ ls
 ~~~
 {: .language-bash}
 ~~~
-TBC
+alpine-python.def  alpine-python.sif  sum.py
 ~~~
 {: .language-bash}
 
@@ -223,10 +140,30 @@ We can do so by using the `%files` section.
 ~~~
 
 This line will cause Singularity to copy the file from your computer into the container's
-filesystem. Let's build the container image like before, but give it a different name:
+filesystem. 
+
+Create a new Singularity recipe file called `alpine-sum.def` with the following contents:
 
 ~~~
-singularity build alpine-sum.sif alpine-sum.def
+Bootstrap: docker
+From: alpine:latest
+
+%files
+    sum.py /home
+
+%post
+    apk add --update python3 py3-pip python3-dev
+
+%runscript
+    python3 --version
+~~~
+
+This is the same definition file as we had before but with the `%files` section added.
+
+Let's build the container image like before, but give it a different name:
+
+~~~
+sudo singularity build alpine-sum.sif alpine-sum.def
 ~~~
 {: .language-bash}
 
@@ -269,7 +206,7 @@ bigger your container image becomes, the harder it will be to easily download.
 
 > ## Copying alternatives
 >
-> Another trick for getting your own files into a container image is by using the `%post`
+> Another approach for getting your own files into a container image is by using the `%post`
 > section and adding commands that download the files from the internet. For example, if your code
 > is in a GitHub repository, you could include this statement in your recipe file
 > to download the latest version every time you build the container image:
@@ -294,28 +231,32 @@ bigger your container image becomes, the harder it will be to easily download.
 > install such commands before using them.
 {: .callout}
 
-
-We can expand on the example above to make our container image even more "automatic".
-
-### Make the `sum.py` script run automatically
-
-~~~
-Bootstrap: docker
-From: alpine:latest
-
-%post
-    apk add --update python3 py3-pip python3-dev
-
-%files
-    sum.py /home
-
-%runscript
-    python3 /home/sum.py
-~~~
+> ## Make the `sum.py` script run automatically
+> 
+> Can you modify the `alpine-sum.def` recipe file so that the `sum.py` is run
+> automatically when using the `singularity run` command?
+>
+> > ## Solution
+> > ~~~
+> > Bootstrap: docker
+> > From: alpine:latest
+> > 
+> > %post
+> >     apk add --update python3 py3-pip python3-dev
+> > 
+> > %files
+> >     sum.py /home
+> > 
+> > %runscript
+> >     python3 /home/sum.py
+> > ~~~
+> >
+> {: .solution}
+{: .challenge
 
 Build and test it:
 ~~~
-singularity build alpine-sum.sif alpine-sum.def
+sudo singularity build alpine-sum.sif alpine-sum.def
 singularity run alpine-sum.sif
 ~~~
 {: .language-bash}
@@ -358,17 +299,17 @@ From: alpine:latest
 
 Build and test it:
 ~~~
-singularity build alpine-sum.sif alpine-sum.def
-singularity run alpine-sum.sif 1 2 3 4
+sudo singularity build alpine-sum.sif alpine-sum.def
+singularity run alpine-sum.sif 10 11 12
 ~~~
 {: .language-bash}
 
 ~~~
-sum = 10
+sum = 33
 ~~~
 {: .output}
 
-### More advanced definition files
+## More advanced definition files
 
 Here we've looked at a very simple example of how to create an image. At this stage, you might want to have a go at creating your own definition file for some code of your own or an application that you work with regularly. There are several definition file sections that were _not_ used in the above example, these are:
 
@@ -382,7 +323,7 @@ Here we've looked at a very simple example of how to create an image. At this st
 
 The [`Sections` part of the definition file documentation](https://docs.sylabs.io/guides/3.11/user-guide/definition_files.html) details all the sections and provides an example definition file that makes use of all the sections.
 
-### Additional Singularity features
+## Additional Singularity features
 
 Singularity has a wide range of features. You can find full details in the [Singularity User Guide](https://docs.sylabs.io/guides/3.11/user-guide/index.html) and we highlight a couple of key features here that may be of use/interest:
 
