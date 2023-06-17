@@ -156,7 +156,6 @@ From: alpine:latest
 %runscript
     python3 --version
 ~~~
-{: .language-singularity}
 
 Let's break this file down:
 
