@@ -10,7 +10,7 @@ objectives:
 - "Understand what practical steps I can take to improve the reproducibility of my research using containers."
 keypoints:
 - "Container images allow us to encapsulate the computation (and data) we have used in our research."
-- "Using a service such as Docker Hub allows us to easily share computational work we have done."
+- "Using online containerimage repositories allows us to easily share computational work we have done."
 - "Using container images along with a DOI service such as Zenodo allows us to capture our work and enables reproducibility."
 ---
 
@@ -77,7 +77,7 @@ Note that Zenodo is not the only option for archiving and generating persistent 
 
    - Make use of container images to capture the computational environment required for your work.
    - Decide on the appropriate granularity for the container images you will use for your computational work -- this will be different for each project/area. Take note of accepted practice from contemporary work in the same area. What are the right building blocks for individual container images in your work?
-   - Document what you have done and why -- this can be put in comments in the `Dockerfile` and the use of the container image described in associated documentation and/or publications. Make sure that references are made in both directions so that the container image and the documentation are appropriately linked.
+   - Document what you have done and why -- this can be put in comments in the Singularity recipe file and the use of the container image described in associated documentation and/or publications. Make sure that references are made in both directions so that the container image and the documentation are appropriately linked.
    - When you publish work (in whatever way) use an archiving and DOI service such as Zenodo to make sure your container image is captured as it was used for the work and that is obtains a persistent DOI to allow it to be cited and referenced properly.
 
 ## Container Granularity
