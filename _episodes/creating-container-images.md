@@ -129,7 +129,7 @@ of the container image.
 > your container images but it is not generally a good way to create reproducible
 > container images.
 >
-> [Singularity CE docs on snadbox images](https://docs.sylabs.io/guides/3.10/user-guide/build_a_container.html#creating-writable-sandbox-directories)
+> [Singularity CE docs on sandbox images](https://docs.sylabs.io/guides/3.10/user-guide/build_a_container.html#creating-writable-sandbox-directories)
 {: .callout}
 
 ## Put installation instructions in a Singularity recipe file
