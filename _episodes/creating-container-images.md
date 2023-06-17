@@ -20,15 +20,35 @@ There are lots of reasons why you might want to create your **own** Singularity 
 - You want to have a container image to "archive" all the specific software versions you ran for a project.
 - You want to share your workflow with someone else.
 
-## Interactive installation
+## Python 3 in Alpine Linux
 
-Before creating a reproducible installation, let's experiment with installing
-software inside a container. Start a container from an `alpine` Docker container image interactively:
+Before creating a reproducible installation, let's start with a minimal Linux container image.
+Create container from an `alpine` Docker container image:
 
 ~~~
-singularity shell docker://alpine 
+singularity pull alpine.sif docker://alpine 
 ~~~
 {: .language-bash}
+
+~~~
+INFO:    Converting OCI blobs to SIF format
+INFO:    Starting build...
+Getting image source signatures
+Copying blob 31e352740f53 done
+Copying config f4b9357049 done
+Writing manifest to image destination
+Storing signatures
+2023/06/17 09:38:24  info unpack layer: sha256:31e352740f534f9ad170f75378a84fe453d6156e40700b882d737a8f4a6988a3
+INFO:    Creating SIF file...
+~~~
+{: .output}
+
+Now, start a shell in a container based on the new container image:
+
+~~~
+singularity shell alpine.sif
+~~~
+{: .language-bash
 
 Because this is a basic container, there's a lot of things not installed -- for
 example, `python3`.
@@ -52,10 +72,71 @@ apk add --update python3 py3-pip python3-dev
 ~~~
 {: .language-bash}
 
+## Interactive installation
+
+You may wonder why we cannot install Python 3 directly in the running container itself by
+using the command above. If you try to do this, you will get an error:
+
+~~~
+ERROR: Unable to lock database: Read-only file system
+ERROR: Failed to open apk database: Read-only file system
+~~~
+{: .output}
+ 
+This is becasue the system directories where `apk` would install
+Python are in read-only file system layers in the running container. Installing
+software interactively is not ideal anyway from a reproducibility aspect as it 
+makes it difficult to know exactily what process was followed to install the software
+in the container image and track changes to this process over time and/or versions
+of the container image.
+
+> ## Writable container images
+> >
+> There is a way to create an image in a way that can be written to
+> but it is a bit convoluted and not as useful as you might first expect; due, in a large
+> part to the reproducibility issues discussed above. To be able to install
+> Python 3 in a running Alpine container we need to build and run the container in a different
+> way. You need to build the container as the admin/root user and use the `--sandbox` flag:
+>
+> ~~~
+> sudo singularity build --sandbox alpine-wriable.sandbox docker://alpine
+> ~~~
+> {: .language-bash}
+>
+> Once the sandbox container image has been built, we need to open a shell in a container based
+> on the sandbox container image as the admin/root user:
+>
+> ~~~
+> sudo singularity run --writable alpine-writable.sandbox
+> ~~~
+> {: .language-bash}
+> ~~~
+>
+> Now, finally, we can use the `apk add --update python3 py3-pip python3-dev` command in
+> the running container to install Python 3. Note, the installation will persist in
+> the sandbox container image even if you shut down the running container and start
+> a new one.
+>
+> If you then want to convert the sandbox container image to a standard container image
+> you can use the build command:
+>
+> ~~~
+> sudo singularity build alpine-python.sif alpine-writable.sandbox
+> ~~~
+> {: .language-bash}
+>
+> This approach can be useful for exploring the install commands to use to create
+> your container images but it is not generally a good way to create reproducible
+> container images.
+
 ## Put installation instructions in a Singularity recipe file
 
 A Singularity recipe file is a plain text file with keywords and commands that
-can be used to create a new container image. We will create a simple recipe file
+can be used to create a new container image. This is a much more reporducible approach
+than installing things interactively as it allows us to have a record of exactly how we
+installed software in the container image and, as it is plain text, it lends itself well
+to being placed under version control (e.g. using git and Github/Gitlab) to track and manage
+versions of the recipe file. We will create a simple recipe file
 to create our own Singularity container image which is based on Alpine Linux with 
 Python 3 installed.
 
@@ -76,27 +157,41 @@ From: alpine:latest
 
 Let's break this file down:
 
-- The first line, `Bootstrap: docker`, tells Singularity that we want to start the build from an existing Docker container image
-- The next line, `From: alpine:latest`, indicates which container image we are starting from.  It is the "base" container image we are going to start from. With the line above, this is a container image from Docker Hub.
-- The `%post` section specifies commands to run as part of the image build process. In this case we use the Alpine Linux `apk` command to install Python3.
-- The last section, `%runscript`, indicates the default action we want a
-container based on this container image to run. In this case, we ask the container to return the version of Python installed in the container.
+- The first line, `Bootstrap: docker`, tells Singularity that we want to start the build from an existing Docker
+  container image.
+- The next line, `From: alpine:latest`, indicates which container image we are starting from.  It is the "base"
+  container image we are going to start from. As no Docker container URL is specified, Singularity assumes that
+  this is a container image from Docker Hub.
+- The `%post` section specifies commands to run as part of the image build process. In this case we use the
+  Alpine Linux `apk` command to install Python3.
+- The last section, `%runscript`, indicates the default action we want a container based on this container image
+  to run (when used with `singularity run`). In this case, we ask the container to return the version of Python
+  installed in the container.
 
 ## Create a new Singularity container image
 
 So far, we only have a text file named `alpine-python.def` -- we do not yet have a container image.
 We want Singularity to take this recipe file, run the installation commands contained within it, and then save the
-resulting container as a new container image. To do this we will use the
-`singularity build` command.
+resulting container as a new container image. To do this we will use the `singularity build` command.
 
 We have to provide `singularity build` command with two pieces of information:
 - the name of the new container image file
 - the name of the recipe file
 
+As we are building a container image we need admin/root privileges so we need to use the `sudo` command to 
+run our `singularity build` command.
+
+> ## sudo Password
+> As you are using `sudo`, you may be asked by the system for your password when you run this
+> command. Your system will typically ask for the password when using `sudo` for the first time
+> after an expirery period is reached (this can be every 5 mins but is sometimes longer, it
+> depends on the system you are using.
+{: .callout} 
+
 All together, the build command that you should run on your computer, will have a similar structure to this:
 
 ~~~
-$ singularity build <container image file name> <recipe file name>
+sudo singularity build <container image file name> <recipe file name>
 ~~~
 {: .language-bash}
 
@@ -104,10 +199,51 @@ For example, if my recipe is in the file `alpine-python.def` and I wanted to cal
 container image file `alpine-python.sif`, I would use this command:
 
 ~~~
-$ singularity build alpine-python.sif alpine-python.def
+sudo singularity build alpine-python.sif alpine-python.def
 ~~~
 {: .language-bash}
 
+~~~
+INFO:    Starting build...
+2023/06/17 10:20:54  info unpack layer: sha256:31e352740f534f9ad170f75378a84fe453d6156e40700b882d737a8f4a6988a3
+INFO:    Running post scriptlet
++ apk add --update python3 py3-pip python3-dev
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.18/main/x86_64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86_64/APKINDEX.tar.gz
+(1/27) Installing libbz2 (1.0.8-r5)
+(2/27) Installing libexpat (2.5.0-r1)
+(3/27) Installing libffi (3.4.4-r2)
+(4/27) Installing gdbm (1.23-r1)
+(5/27) Installing xz-libs (5.4.3-r0)
+(6/27) Installing libgcc (12.2.1_git20220924-r10)
+(7/27) Installing libstdc++ (12.2.1_git20220924-r10)
+(8/27) Installing mpdecimal (2.5.1-r2)
+(9/27) Installing ncurses-terminfo-base (6.4_p20230506-r0)
+(10/27) Installing libncursesw (6.4_p20230506-r0)
+(11/27) Installing libpanelw (6.4_p20230506-r0)
+(12/27) Installing readline (8.2.1-r1)
+(13/27) Installing sqlite-libs (3.41.2-r2)
+(14/27) Installing python3 (3.11.4-r0)
+(15/27) Installing python3-pycache-pyc0 (3.11.4-r0)
+(16/27) Installing pyc (0.1-r0)
+(17/27) Installing py3-setuptools-pyc (67.7.2-r0)
+(18/27) Installing py3-pip-pyc (23.1.2-r0)
+(19/27) Installing py3-parsing (3.0.9-r2)
+(20/27) Installing py3-parsing-pyc (3.0.9-r2)
+(21/27) Installing py3-packaging-pyc (23.1-r1)
+(22/27) Installing python3-pyc (3.11.4-r0)
+(23/27) Installing py3-packaging (23.1-r1)
+(24/27) Installing py3-setuptools (67.7.2-r0)
+(25/27) Installing py3-pip (23.1.2-r0)
+(26/27) Installing pkgconf (1.9.5-r0)
+(27/27) Installing python3-dev (3.11.4-r0)
+Executing busybox-1.36.1-r0.trigger
+OK: 142 MiB in 42 packages
+INFO:    Adding runscript
+INFO:    Creating SIF file...
+INFO:    Build complete: alpine-python.sif
+~~~
+{: .output}
 
 > ## Exercise: Review!
 >
