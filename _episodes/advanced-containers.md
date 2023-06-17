@@ -9,7 +9,7 @@ objectives:
 - "Explain how you can access files on the Singularity host from your Singularity containers."
 keypoints:
 - Singularity allows containers to read and write files from the Singularity host.
-- You can include files from your Singularity host into your Singularity container images by using the `COPY` instruction in your `Singularityfile`.
+- You can include files from your Singularity host into your Singularity container images by using the `%files` section in your Singularity recipe file.
 ---
 
 In order to create and use your own container images, you may need more information than
