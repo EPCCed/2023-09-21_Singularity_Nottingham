@@ -104,7 +104,6 @@ Of course, many real applications will sit somewhere between these two extremes.
 > >   + Potentially easier to maintain (though could be opposite if working with large, distributed group)
 > > - Disadvantages:
 > >   + Could get very large in size, making it more difficult to distribute
-> >     + Could use [Docker multi-stage build](https://docs.docker.com/develop/develop-images/multistage-build) to reduce size
 > >   + May end up with same dependency issues within the container image from different software requirements
 > >   + Potentially more complex to test
 > >   + Less re-useable for different, but related, work
