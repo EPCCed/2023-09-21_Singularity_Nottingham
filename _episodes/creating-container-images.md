@@ -13,6 +13,7 @@ objectives:
 keypoints:
 - "Singularity recipe files specify what is within Singularity container images."
 - "The `singularity build` command is used to build a container image from a recipe file."
+- "`singularity build` requires admin/root privileges so usually needs to be prefixed with `sudo`."
 ---
 
 There are lots of reasons why you might want to create your **own** Singularity container image.
@@ -99,7 +100,7 @@ of the container image.
 > way. You need to build the container as the admin/root user and use the `--sandbox` flag:
 >
 > ~~~
-> sudo singularity build --sandbox alpine-wriable.sandbox docker://alpine
+> sudo singularity build --sandbox alpine-writable.sandbox docker://alpine
 > ~~~
 > {: .language-bash}
 >
@@ -110,7 +111,6 @@ of the container image.
 > sudo singularity run --writable alpine-writable.sandbox
 > ~~~
 > {: .language-bash}
-> ~~~
 >
 > Now, finally, we can use the `apk add --update python3 py3-pip python3-dev` command in
 > the running container to install Python 3. Note, the installation will persist in
@@ -128,12 +128,14 @@ of the container image.
 > This approach can be useful for exploring the install commands to use to create
 > your container images but it is not generally a good way to create reproducible
 > container images.
+>
+> [Singularity CE docs on snadbox images](https://docs.sylabs.io/guides/3.10/user-guide/build_a_container.html#creating-writable-sandbox-directories)
 {: .callout}
 
 ## Put installation instructions in a Singularity recipe file
 
 A Singularity recipe file is a plain text file with keywords and commands that
-can be used to create a new container image. This is a much more reporducible approach
+can be used to create a new container image. This is a much more reproducible approach
 than installing things interactively as it allows us to have a record of exactly how we
 installed software in the container image and, as it is plain text, it lends itself well
 to being placed under version control (e.g. using git and Github/Gitlab) to track and manage
@@ -154,15 +156,15 @@ From: alpine:latest
 %runscript
     python3 --version
 ~~~
-{: .output}
+{: .language-singularity}
 
 Let's break this file down:
 
 - The first line, `Bootstrap: docker`, tells Singularity that we want to start the build from an existing Docker
   container image.
 - The next line, `From: alpine:latest`, indicates which container image we are starting from.  It is the "base"
-  container image we are going to start from. As no Docker container URL is specified, Singularity assumes that
-  this is a container image from Docker Hub.
+  container image we are going to start from. As no Docker container image repository URL is specified, Singularity 
+  assumes that this is a container image from Docker Hub.
 - The `%post` section specifies commands to run as part of the image build process. In this case we use the
   Alpine Linux `apk` command to install Python3.
 - The last section, `%runscript`, indicates the default action we want a container based on this container image
@@ -185,7 +187,7 @@ run our `singularity build` command.
 > ## sudo Password
 > As you are using `sudo`, you may be asked by the system for your password when you run this
 > command. Your system will typically ask for the password when using `sudo` for the first time
-> after an expirery period is reached (this can be every 5 mins but is sometimes longer, it
+> after an expiry period is reached (this can be every 5 mins but is sometimes longer, it
 > depends on the system you are using.
 {: .callout} 
 
