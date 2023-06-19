@@ -20,16 +20,18 @@ keypoints:
   + [Layers](https://docs.docker.com/storage/storagedriver/)
 - Container technologies
   + [Docker](https://docs.docker.com/)
-  + Others: Podman, Sarus, OCI
-- Container goodpractice
+  + [Podman](https://podman.io/)
+  + [Container Engine State of the Art (FOSDEM'21)](https://www.youtube.com/watch?v=Ir11tGO7lpI)
+- Container good practice
   + [How should containers be used and present themselves?](https://qnib.org/data/2023-01-29/HPC_OCI_Conformance_v10.pdf)
   + [Best practice for bioinformatic containers](https://f1000research.com/articles/7-742/v2)
 - Container orchestration
+  + 
 
 ## Useful links
 
-- Docker Intro
-- Singularity docs
-- Apptainer docs
+- [Docker Introductory course (Carpentries Incubator)](https://carpentries-incubator.github.io/docker-introduction/)
+- [Singularity CE documentation](https://sylabs.io/docs/)
+- [Apptainer documentation](https://apptainer.org/docs/)
 
 
