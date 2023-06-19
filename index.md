@@ -25,7 +25,7 @@ This lesson will introduce Singularity from scratch showing you how to run a sim
    + 1400-1630, Wed 21 June 2023
    + 1000-1600, Thu 22 June 2023
  - Location:
-   + TBC, Radboud UMC, Nijmagen, NL
+   + Vendrik C + D, [Studiecentrum, Radboud UMC, Nijmagen, NL](https://www.radboudumc.nl/ingangen/studiecentrum)
  - Instructor: Andy Turner, EPCC, University of Edinburgh, UK
 
 
