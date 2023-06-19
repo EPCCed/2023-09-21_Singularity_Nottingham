@@ -82,21 +82,13 @@ installed may also provide a `singularity` command that is simply a link to the
 scripts being used on the system that were developed before the migration to
 Apptainer will still function correctly.
 
-_For now, the remainder of this material refers to Singularity but where you
+For now, the remainder of this material refers to Singularity but where you
 have a release of Apptainer installed on your local system, you can simply
 replace references to `singularity` with `apptainer`, if you wish.
 
 
-Sign in to the remote platform, with Singularity installed, that you've been provided with access to. Check that the `singularity` command is available in your terminal:
-
-> ## Loading a module
-> HPC systems often use *modules* to provide access to software on the system so you may need to use the command:
-> ~~~
-> $ module load singularity
-> ~~~
-> {: .language-bash}
-> before you can use the `singularity` command on remote systems. However, this depends on how the system is configured. If in doubt, consult the documentation for the system you are using or contact the support team.
-{: .callout}
+Open a terminal on the system that you are using for the course and check that
+the `singularity` command is available in your terminal:
 
 ~~~
 $ singularity --version
@@ -110,40 +102,50 @@ singularity-ce version 3.11.0
 
 Depending on the version of Singularity installed on your system, you may see a different version.
 
+> ## Loading a module
+> HPC systems often use *modules* to provide access to software on the system so you may need to use the command:
+> ~~~
+> $ module load singularity
+> ~~~
+> {: .language-bash}
+> before you can use the `singularity` command on remote systems. However, this depends on how the system is configured.
+> If in doubt, consult the documentation for the system you are using or contact the support team.
+{: .callout}
+
 ## Images and containers: reminder
 
-A quick reminder on terminology: we refer to both **_container images_** and **_containers_**. between these two terms? 
+A quick reminder on terminology: we refer to both *container images* and *containers*. What is the difference between these two terms? 
 
-*Container images* (sometimes just ) are bundles of files including an operating system, software and potentially data and other application-related files. They may sometimes be referred to as a *disk image* or *image* and they may be stored in different ways, perhaps as a single file, or as a group of files. Either way, we refer to this file, or collection of files, as an image.
+*Container images* (sometimes just *images*) are bundles of files including an operating system, software and potentially data and other application-related files. They may sometimes be referred to as a *disk image* or *image* and they may be stored in different ways, perhaps as a single file, or as a group of files. Either way, we refer to this file, or collection of files, as an image.
 
-A *container_* is a virtual environment that is based on a container image. That is, the files, applications, tools, etc that are available within a running container are determined by the image that the container is started from. It may be possible to start multiple container instances from an image. You could, perhaps, consider an image to be a form of template from which running container instances can be started.
+A *container* is a virtual environment that is based on a container image. That is, the files, applications, tools, etc that are available within a running container are determined by the image that the container is started from. It may be possible to start multiple container instances from an image. You could, perhaps, consider an image to be a form of template from which running container instances can be started.
 
 ## Getting a container image and running a Singularity container
 
-Singularity uses the [Singularity Image Format (SIF)](https://github.com/sylabs/sif) and container images are provided as single `SIF` files (usually with a `.sif` or `.img` filename extension). Singularity container images can be pulled from [Singularity Hub](https://singularity-hub.org/), a registry for container images. Singularity is also capable of running containers based on container images pulled from [Docker Hub](https://hub.docker.com/) and other Docker image repositories (e.g. [Quay.io](https://quay.io)). We will look at accessing container images from Docker Hub later in the Singularity material.
+Singularity uses the [Singularity Image Format (SIF)](https://github.com/sylabs/sif) and container images are provided as single `SIF` files (usually with a `.sif` or `.img` filename extension). Singularity container images can be pulled from the [Sylabs Cloud Library](https://cloud.sylabs.io/), a registry for Singularity container images. Singularity is also capable of running containers based on container images pulled from [Docker Hub](https://hub.docker.com/) and other Docker image repositories (e.g. [Quay.io](https://quay.io)). We will look at accessing container images from Docker Hub later in the course.
 
 > ## Singularity Hub
-> Note that in addition to providing a repository that you can pull container images from, [Singularity Hub](https://singularity-hub.org/) can also build Singularity images for you from a *recipe* - a configuration file defining the steps to build an image. We will look at recipes and building images later in the workshop.
+> Note that in addition to providing a repository that you can pull container images from, [Sylabs Cloud Library](https://cloud.sylabs.io/) can also build Singularity images for you from a *recipe* - a configuration file defining the steps to build an image. We will look at recipes and building images later in the workshop.
 {: .callout}
 
-### Pulling a container image from Singularity Hub
+### Pulling a container image from Sylabs Cloud Library
 
 Let's begin by creating a `test` directory, changing into it and _pulling_ an existing _Hello World_ container image from Singularity Hub:
 
 ~~~
 $ mkdir test
 $ cd test
-$ singularity pull hello-world.sif shub://vsoch/hello-world
+$ singularity pull lolcow.sif library://lolcow
 ~~~
 {: .language-bash}
 
 ~~~
-INFO:    Downloading shub image
- 59.75 MiB / 59.75 MiB [===============================================================================================================] 100.00% 52.03 MiB/s 1s
+INFO:    Downloading library image
+ 90.4 MiB / 90.4 MiB [===============================================================================================================] 100.00% 90.4 MiB/s 1s
 ~~~
 {: .output}
 
-What just happened? We pulled a container image from Singularity Hub using the `singularity pull` command and directed it to store the container image in a file using the name `hello-world.sif` in the current directory. If you run the `ls` command, you should see that the `hello-world.sif` file is now present in the current directory.
+What just happened? We pulled a container image from a remote repository using the `singularity pull` command and directed it to store the container image in a file using the name `lolcow.sif` in the current directory. If you run the `ls` command, you should see that the `lolcow.sif` file is now present in the current directory.
 
 ~~~
 $ ls -lh
@@ -152,27 +154,27 @@ $ ls -lh
 
 ~~~
 total 60M
--rwxr-xr-x. 1 auser group 60M Jun 13  2023 hello-world.sif
+-rwxr-xr-x. 1 auser group 91M Jun 13  2023 lolcow.sif
 ~~~
 {: .output}
 
 ### Running a Singularity container
 
-We can now run a container based on the `hello-world.sif` container image:
+We can now run a container based on the `lolcow.sif` container image:
 
 ~~~
-$ singularity run hello-world.sif
+$ singularity run lolcow.sif
 ~~~
 {: .language-bash}
 
 ~~~
-RaawwWWWWWRRRR!! Avocado!
+TBC
 ~~~
 {: .output}
 
-The above command ran a *hello-world* container based on the container image we downloaded from Singularity Hub and the resulting output was shown. 
+The above command ran a *lolcow* container based on the container image we downloaded from the online repository and the resulting output was shown. 
 
-What just happened? When we use the `docker container run` command, Docker does three things:
+What just happened? When we use the `singularity run` command, Singularity does three things:
 
 | 1. Starts a Running Container | 2. Performs Default Action | 3. Shuts Down the Container
 | --------------------|-----------------|----------------|
@@ -182,23 +184,21 @@ What just happened? When we use the `docker container run` command, Docker does 
 
 How did the container determine what to do when we ran it? What did running the container actually do to result in the displayed output?
 
-When you run a container from a Singularity container image without using any additional command line arguments, the container runs the default run script that is embedded within the container image. This is a shell script that can be used to run commands, tools or applications stored within the container image on container startup. We can inspect the container image's run script using the `singularity inspect` command:
+When you run a container from a Singularity container image using the `singularity run` command the container runs the default run script that is embedded within the container image. This is a shell script that can be used to run commands, tools or applications stored within the container image on container startup. We can inspect the container image's run script using the `singularity inspect` command:
 
 ~~~
-$ singularity inspect -r hello-world.sif
+$ singularity inspect -r lolcow.sif
 ~~~
 {: .language-bash}
 
 ~~~
 #!/bin/sh 
 
-exec /bin/bash /rawr.sh
+    date  |  cowsay  |  lolcat
 
 ~~~
 {: .output}
 
-This shows us the script within the `hello-world.sif` image configured to run by default when we use the `singularity run` command.
-
-While 
+This shows us the script within the `lolcow.sif` image configured to run by default when we use the `singularity run` command.
 
 That concludes this introductory Singularity episode. The next episode looks in more detail at running containers.

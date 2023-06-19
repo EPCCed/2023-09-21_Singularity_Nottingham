@@ -20,7 +20,7 @@ keypoints:
 - "Singularity is just one software platform that can create containers and the resources they use."
 ---
 
-> ## Learning about Docker Containers
+> ## Learning about Containers
 >
 > The Australian Research Data Commons has produced a short introductory video
 > about containers that covers many of the points below. Watch it before
