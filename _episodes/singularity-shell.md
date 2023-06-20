@@ -17,10 +17,10 @@ keypoints:
 
 We saw earlier that we can use the `singularity inspect` command to see the run script that a container is configured to run by default. What if we want to run a different command within a container?
 
-If we know the path of an executable that we want to run within a container, we can use the `singularity exec` command. For example, using the `hello-world.sif` container that we've already pulled from Singularity Hub, we can run the following within the `test` directory where the `hello-world.sif` file is located:
+If we know the path of an executable that we want to run within a container, we can use the `singularity exec` command. For example, using the `lolcow.sif` container that we've already pulled from Singularity Hub, we can run the following within the `test` directory where the `lolcow.sif` file is located:
 
 ~~~
-$ singularity exec hello-world.sif /bin/echo Hello World!
+singularity exec lolcow.sif /bin/echo Hello World!
 ~~~
 {: .language-bash}
 
@@ -29,18 +29,18 @@ Hello World!
 ~~~
 {: .output}
 
-Here we see that a container has been started from the `hello-world.sif` image and the `/bin/echo` command has been run within the container, passing the input `Hello World!`. The command has echoed the provided input to the console and the container has terminated.
+Here we see that a container has been started from the `lolcow.sif` image and the `/bin/echo` command has been run within the container, passing the input `Hello World!`. The command has echoed the provided input to the console and the container has terminated.
 
 Note that the use of `singularity exec` has overriden any run script set within the image metadata and the command that we specified as an argument to `singularity exec` has been run instead.
 
 > ## Basic exercise: Running a different command within the "hello-world" container
 >
-> Can you run a container based on the `hello-world.sif` image that *prints the current date and time*?
+> Can you run a container based on the `lolcow.sif` image that *prints the current date and time*?
 > 
 > > ## Solution
 > >
 > > ~~~
-> > $ singularity exec hello-world.sif /bin/date
+> > singularity exec lolcow.sif /bin/date
 > > ~~~
 > > {: .language-bash}
 > > 
@@ -74,10 +74,10 @@ two commands is:
 
 ## Opening an interactive shell within a container
 
-If you want to open an interactive shell within a container, Singularity provides the `singularity shell` command. Again, using the `hello-world.sif` image, and within our `test` directory, we can run a shell within a container from the hello-world image:
+If you want to open an interactive shell within a container, Singularity provides the `singularity shell` command. Again, using the `lolcow.sif` image, and within our `test` directory, we can run a shell within a container from the hello-world image:
 
 ~~~
-$ singularity shell hello-world.sif
+$ singularity shell lolcow.sif
 ~~~
 {: .language-bash}
 
@@ -85,12 +85,12 @@ $ singularity shell hello-world.sif
 Singularity> whoami
 [<your username>]
 Singularity> ls
-hello-world.sif
+lolcow.sif
 Singularity> 
 ~~~
 {: .output}
 
-As shown above, we have opened a shell in a new container started from the `hello-world.sif` image. Note that the shell prompt has changed to show we are now within the Singularity container.
+As shown above, we have opened a shell in a new container started from the `lolcow.sif` image. Note that the shell prompt has changed to show we are now within the Singularity container.
 
 Use the `exit` command to exit from the container shell.
 
