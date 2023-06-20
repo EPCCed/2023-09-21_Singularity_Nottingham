@@ -17,9 +17,7 @@ our previous example. You may want to include files from outside the container b
 into the container image. You may also want to learn a little bit more
 about how to install software within a running container or a container image. 
 This episode will look at these advanced aspects of building 
-a container image. Note that the examples will get gradually
-more and more complex -- most day-to-day use of containers and container images can be accomplished
-using the first 1--2 sections on this page.
+a container image. 
 
 ## Refresher: using scripts and files from outside the container at runtime
 
@@ -106,7 +104,7 @@ sum = 0
 > {: .solution}
 {: .challenge}
 
-This all works without any further options because Singualrity binds the current directory into the
+This all works without any further options because Singularity binds the current directory into the
 running container by default. If the `sum.py` was in a directory other than the current directory 
 (or its subdirectories) then you would need to bind it into the running container explicitly using
 the `-B` option as described earlier in the course.
@@ -314,7 +312,6 @@ sum = 33
 Here we've looked at a very simple example of how to create an image. At this stage, you might want to have a go at creating your own definition file for some code of your own or an application that you work with regularly. There are several definition file sections that were _not_ used in the above example, these are:
 
  - `%setup`
- - `%files`
  - `%environment`
  - `%startscript`
  - `%test`
