@@ -84,10 +84,10 @@ ERROR: Failed to open apk database: Read-only file system
 ~~~
 {: .output}
  
-This is becasue the system directories where `apk` would install
+This is because the system directories where `apk` would install
 Python are in read-only file system layers in the running container. Installing
 software interactively is not ideal anyway from a reproducibility aspect as it 
-makes it difficult to know exactily what process was followed to install the software
+makes it difficult to know exactly what process was followed to install the software
 in the container image and track changes to this process over time and/or versions
 of the container image.
 
@@ -187,7 +187,7 @@ run our `singularity build` command.
 > As you are using `sudo`, you may be asked by the system for your password when you run this
 > command. Your system will typically ask for the password when using `sudo` for the first time
 > after an expiry period is reached (this can be every 5 mins but is sometimes longer, it
-> depends on the system you are using.
+> depends on the system you are using).
 {: .callout} 
 
 All together, the build command that you should run on your computer, will have a similar structure to this:
@@ -313,5 +313,6 @@ including:
 
 - Place them on shared storage on the shared facility so other can access them
 - Place on external storage that is publicly available via the web
+- Add them to an online repository such as the Sylabs Cloud Library
 
 {% include links.md %}
