@@ -25,8 +25,10 @@ keypoints:
 - Container good practice
   + [How should containers be used and present themselves?](https://qnib.org/data/2023-01-29/HPC_OCI_Conformance_v10.pdf)
   + [Best practice for bioinformatic containers](https://f1000research.com/articles/7-742/v2)
-- Container orchestration
-  + 
+- Container orchestration - typically using Docker containers rather than Singularity
+  + [Kubernetes](https://kubernetes.io/)
+  + [Docker Compose](https://docs.docker.com/compose/)
+  + [Docker Swarm](https://docs.docker.com/engine/swarm/)
 
 ## Useful links
 
