@@ -136,4 +136,4 @@ In addition to running a container and having it run the default run script, you
 
 ## References
 
-\[1\] Gregory M. Kurzer, Containers for Science, Reproducibility and Mobility: Singularity P2. Intel HPC Developer Conference, 2017. Available at: https://www.intel.com/content/dam/www/public/us/en/documents/presentation/hpc-containers-singularity-advanced.pdf
+\[1\] [Gregory M. Kurzer, Containers for Science, Reproducibility and Mobility: Singularity P2. Intel HPC Developer Conference, 2017](https://www.youtube.com/watch?v=DA87Ba2dpNM)
