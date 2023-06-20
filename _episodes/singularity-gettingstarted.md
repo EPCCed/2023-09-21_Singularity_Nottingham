@@ -191,7 +191,7 @@ What just happened? When we use the `singularity run` command, Singularity does 
 
 How did the container determine what to do when we ran it? What did running the container actually do to result in the displayed output?
 
-When you run a container from a Singularity container image using the `singularity run` command the container runs the default run script that is embedded within the container image. This is a shell script that can be used to run commands, tools or applications stored within the container image on container startup. We can inspect the container image's run script using the `singularity inspect` command:
+When you run a container from a Singularity container image using the `singularity run` command, the container runs the default run script that is embedded within the container image. This is a shell script that can be used to run commands, tools or applications stored within the container image on container startup. We can inspect the container image's run script using the `singularity inspect` command:
 
 ~~~
 $ singularity inspect -r lolcow.sif
