@@ -21,10 +21,10 @@ keypoints:
 
 Unless you are building your own container images (more on this later), you will typically obtain container images from an repository of container images. This could be a public repository such as Singularity Hub or a private location. For example, your organisation may provide container images for specific tasks or tools.
 
-To download Singularity container images from online sources you use the `singularity pull` command. For example, to pull the `hello-world` container image from Singularity Hub and save to the file `hello-world.sif` , you would use:
+To download Singularity container images from online sources you use the `singularity pull` command. For example, to pull the `lolcow` container image from the Sylabs Cloud Library and save to the file `lolcow.sif` , you would use:
 
 ~~~
-singularity pull hello-world.sif shub://hello-world
+singularity pull lolcow.sif library://lolcow
 ~~~
 
 You can also obtain container images from the vast store of Docker container images in public Docker container image repositories such as Docker Hub using the `singularity pull` command. For example, to create a Singularity container image file called `python-slim-3.9.6.sif` from the official Python 3.9.6 Slim Buster container image, you would use:
@@ -54,10 +54,10 @@ There are 3 main commands used to run Singularity containers:
 
 ## Files and directories in Singularity containers
 
-The files and directories available in a running container will typically be a mix of those from the container image and those from the host system. Some files/directories from the host system will be available by default in the container - these are typically configured by the person who installed Singularity on the system we are running on. We can *bind* additional files or directories from the host system into the running container by using the `-B` option to the `singularity` command. For example, to bind the host directory `/work/z19/shared` into a container we would use:
+The files and directories available in a running container will typically be a mix of those from the container image and those from the host system. Some files/directories from the host system will be available by default in the container - these are typically configured by the person who installed Singularity on the system we are running on. We can *bind* additional files or directories from the host system into the running container by using the `-B` option to the `singularity` command. For example, to bind the host directory `/mnt/c/Users/Andrew` into a container we would use:
 
 ~~~
-singularity run -B /work/z19/shared my-image.sif
+singularity run -B /mnt/c/Users/Andrew my-image.sif
 ~~~
 
 **Important:** You have the same permissions to read and edit files in the container as you had on the host system.
