@@ -158,7 +158,7 @@ total 60M
 ~~~
 {: .output}
 
-### Running a Singularity container
+### Running a Singularity container
 
 We can now run a container based on the `lolcow.sif` container image:
 
@@ -168,7 +168,14 @@ $ singularity run lolcow.sif
 {: .language-bash}
 
 ~~~
-TBC
+ ______________________________
+< Tue Jun 20 08:44:51 UTC 2023 >
+ ------------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
 ~~~
 {: .output}
 
