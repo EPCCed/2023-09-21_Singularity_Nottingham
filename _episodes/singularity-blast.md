@@ -27,8 +27,7 @@ provides the BLAST+ software.
 >
 > (This is because the NCBI BLAST+ Docker container image has the `efetch` tool
 > installed in the `/root` directory and this special location gets overwritten
-> during the conversion to a Singularity container image. We demonstrate how to
-> build a container image with the `efetch` tool available later in the course.)
+> during the conversion to a Singularity container image.)
 {: .callout}
 
 ## Download the required data
