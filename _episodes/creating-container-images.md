@@ -97,18 +97,18 @@ of the container image.
 > but it is a bit convoluted and not as useful as you might first expect; due, in a large
 > part to the reproducibility issues discussed above. To be able to install
 > Python 3 in a running Alpine container we need to build and run the container in a different
-> way. You need to build the container as the admin/root user and use the `--sandbox` flag:
+> way. You need to use the `--sandbox` flag:
 >
 > ~~~
-> sudo singularity build --sandbox alpine-writable.sandbox docker://alpine
+> singularity build --sandbox alpine-writable.sandbox docker://alpine
 > ~~~
 > {: .language-bash}
 >
 > Once the sandbox container image has been built, we need to open a shell in a container based
-> on the sandbox container image as the admin/root user:
+> on the sandbox container image:
 >
 > ~~~
-> sudo singularity run --writable alpine-writable.sandbox
+> singularity shell --writable alpine-writable.sandbox
 > ~~~
 > {: .language-bash}
 >
@@ -121,7 +121,7 @@ of the container image.
 > you can use the build command:
 >
 > ~~~
-> sudo singularity build alpine-python.sif alpine-writable.sandbox
+> singularity build alpine-python.sif alpine-writable.sandbox
 > ~~~
 > {: .language-bash}
 >
