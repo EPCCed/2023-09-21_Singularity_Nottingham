@@ -11,7 +11,7 @@ keypoints:
 - "Singularity is another container platform and it is often used in cluster/HPC/research environments."
 - "Singularity has a different security model to other container platforms, one of the key reasons that it is well suited to HPC and cluster environments."
 - "Singularity has its own container image format (SIF)."
-- "The `singularity` command can be used to pull images from Singularity Hub and run a container from an image file."
+- "The `singularity` command can be used to pull images from Sylabs Cloud Library and run a container from an image file."
 ---
 
 The episodes in this lesson will introduce you to the [Singularity](https://sylabs.io/singularity/) container platform and demonstrate how to set up and use Singularity.
@@ -124,13 +124,13 @@ A *container* is a virtual environment that is based on a container image. That 
 
 Singularity uses the [Singularity Image Format (SIF)](https://github.com/sylabs/sif) and container images are provided as single `SIF` files (usually with a `.sif` or `.img` filename extension). Singularity container images can be pulled from the [Sylabs Cloud Library](https://cloud.sylabs.io/), a registry for Singularity container images. Singularity is also capable of running containers based on container images pulled from [Docker Hub](https://hub.docker.com/) and other Docker image repositories (e.g. [Quay.io](https://quay.io)). We will look at accessing container images from Docker Hub later in the course.
 
-> ## Singularity Hub
+> ## Sylabs Remote Builder
 > Note that in addition to providing a repository that you can pull container images from, [Sylabs Cloud Library](https://cloud.sylabs.io/) can also build Singularity images for you from a *recipe* - a configuration file defining the steps to build an image. We will look at recipes and building images later in the workshop.
 {: .callout}
 
 ### Pulling a container image from Sylabs Cloud Library
 
-Let's begin by creating a `test` directory, changing into it and _pulling_ an existing _Hello World_ container image from Singularity Hub:
+Let's begin by creating a `test` directory, changing into it and _pulling_ an existing container image from Sylabs Cloud Library:
 
 ~~~
 $ mkdir test
