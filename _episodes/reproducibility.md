@@ -1,7 +1,7 @@
 ---
 title: "Containers in Research Workflows: Reproducibility and Granularity"
-teaching: 25
-exercises: 15
+teaching: 20
+exercises: 5
 questions:
 - "How can I use container images to make my research more reproducible?"
 - "How do I incorporate containers into my research workflow?"

@@ -1,5 +1,5 @@
 ---
-title: "Using Singularity to run BLAST+"
+title: "(Optional) Using Singularity to run BLAST+"
 teaching: 30
 exercises: 30
 questions:

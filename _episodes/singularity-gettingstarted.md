@@ -1,7 +1,7 @@
 ---
 title: "Singularity: Getting started"
-teaching: 30
-exercises: 20
+teaching: 15
+exercises: 10
 questions:
 - "What is Singularity and why might I want to use it?"
 objectives:
@@ -15,10 +15,6 @@ keypoints:
 ---
 
 The episodes in this lesson will introduce you to the [Singularity](https://sylabs.io/singularity/) container platform and demonstrate how to set up and use Singularity.
-
-> ## Work in progress...
-> This lesson is new material that is under ongoing development. We will introduce Singularity and demonstrate how to work with it. As the tools and best practices continue to develop, elements of this material are likely to evolve. We welcome any comments or suggestions on how the material can be improved or extended.
-{: .callout}
 
 ## What is Singularity?
 
