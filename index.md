@@ -4,13 +4,9 @@ root: .  # Is the only page that doesn't follow the pattern /:path/index.html
 permalink: index.html  # Is the only page that doesn't follow the pattern /:path/index.html
 ---
 
-This lesson provides an introduction to using the [Singularity container platform](https://github.com/hpcng/singularity). Singularity is particularly suited to running containers on infrastructure where users don't have administrative privileges, for example shared infrastructure such as High Performance Computing (HPC) clusters. 
+This lesson provides an introduction to using the SingularityCE/Apptainer container platform. Singularity is particularly suited to running containers on infrastructure where users don't have administrative privileges, for example shared infrastructure such as High Performance Computing (HPC) clusters. 
 
 This lesson will introduce Singularity from scratch showing you how to run a simple container and building up to creating your own containers and running parallel scientific workloads on HPC infrastructure.
-
-<!-- this is an html comment -->
-
-{% comment %} This is a comment in Liquid {% endcomment %}
 
 > ## Prerequisites
 > You should have basic familiarity with using a command shell, and the lesson text will at times request that you "open a shell window", with an assumption that you know what this means.
@@ -22,10 +18,9 @@ This lesson will introduce Singularity from scratch showing you how to run a sim
 ## Course details
 
  - Dates:
-   + 1400-1630, Wed 21 June 2023
-   + 1000-1600, Thu 22 June 2023
+   + 0900-1530, Thu 21 Sep 2023
  - Location:
-   + Vendrik C + D, [Studiecentrum, Radboud UMC, Nijmagen, NL](https://www.radboudumc.nl/ingangen/studiecentrum)
+   + E06 in the Monica Partridge Building, University of Nottingham, University Park
  - Instructor: Andy Turner, EPCC, University of Edinburgh, UK
 
 
