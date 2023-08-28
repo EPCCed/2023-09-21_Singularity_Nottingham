@@ -2,7 +2,6 @@
 title: "Introducing Containers"
 teaching: 20
 exercises: 0
-start: true
 questions:
 - "What are containers, and why might they be useful to me?"
 objectives:
