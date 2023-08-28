@@ -76,64 +76,66 @@ The Dockerfile to install MPICH and the OSU micro-benchmark we will use
 to build the container image is shown below. Save this in a file called `osu_benchmarks.def`
 
 ~~~
-Bootstrap: docker
-From: ubuntu:20.04
+FROM ubuntu:20.04
 
-%environment
-    export OSU_DIR=/usr/local/libexec/osu-micro-benchmarks/mpi
-    export LD_LIBRARY_PATH=/usr/lib/libibverbs:$LD_LIBRARY_PATH
-    export PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/startup:$PATH
-    export PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt:$PATH
-    export PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/collective:$PATH
+ENV DEBIAN_FRONTEND=noninteractive
 
-%post
-    # Install required dependencies
-    apt-get update && apt-get install -y --no-install-recommends \
-        apt-utils \
-        build-essential \
-        curl \
-        libcurl4-openssl-dev \
-        libzmq3-dev \
-        pkg-config \
-        software-properties-common
-    apt-get clean
-    apt-get install -y dkms
-    apt-get install -y autoconf automake build-essential numactl libnuma-dev autoconf automake gcc g++ git libtool
+# Install the necessary packages (from repo)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+ apt-utils \
+ build-essential \
+ curl \
+ libcurl4-openssl-dev \
+ libzmq3-dev \
+ pkg-config \
+ software-properties-common
+RUN apt-get clean
+RUN apt-get install -y dkms
+RUN apt-get install -y autoconf automake build-essential numactl libnuma-dev autoconf automake gcc g++ git libtool
 
-    # Download and build an ABI compatible MPICH
-    curl -sSLO http://www.mpich.org/static/downloads/3.4.2/mpich-3.4.2.tar.gz \
-        && tar -xzf mpich-3.4.2.tar.gz -C /root \
-        && cd /root/mpich-3.4.2 \
-        && ./configure --prefix=/usr --with-device=ch4:ofi --disable-fortran \
-        && make -j8 install \
-        && rm -rf /root/mpich-3.4.2 \
-        && rm /mpich-3.4.2.tar.gz
+# Download and build an ABI compatible MPICH
+RUN curl -sSLO http://www.mpich.org/static/downloads/3.4.2/mpich-3.4.2.tar.gz \
+   && tar -xzf mpich-3.4.2.tar.gz -C /root \
+   && cd /root/mpich-3.4.2 \
+   && ./configure --prefix=/usr --with-device=ch4:ofi --disable-fortran \
+   && make -j8 install \
+   && rm -rf /root/mpich-3.4.2 \
+   && rm /mpich-3.4.2.tar.gz
 
-    # Download and build OSU benchmarks
-    curl -sSLO http://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-5.4.1.tar.gz \
-        && tar -xzf osu-micro-benchmarks-5.4.1.tar.gz -C /root \
-        && cd /root/osu-micro-benchmarks-5.4.1 \
-        && ./configure --prefix=/usr/local CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx \
-        && cd mpi \
-        && make -j8 install \
-        && rm -rf /root/osu-micro-benchmarks-5.4.1 \
-        && rm /osu-micro-benchmarks-5.4.1.tar.gz
+# OSU benchmarks
+RUN curl -sSLO http://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-5.4.1.tar.gz \
+   && tar -xzf osu-micro-benchmarks-5.4.1.tar.gz -C /root \
+   && cd /root/osu-micro-benchmarks-5.4.1 \
+   && ./configure --prefix=/usr/local CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx \
+   && cd mpi \
+   && make -j8 install \
+   && rm -rf /root/osu-micro-benchmarks-5.4.1 \
+   && rm /osu-micro-benchmarks-5.4.1.tar.gz
 
+# Add the OSU benchmark executables to the PATH
+ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/startup:$PATH
+ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt:$PATH
+ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/collective:$PATH
+ENV OSU_DIR=/usr/local/libexec/osu-micro-benchmarks/mpi
+
+# path to mlx IB libraries in Ubuntu
+ENV LD_LIBRARY_PATH=/usr/lib/libibverbs:$LD_LIBRARY_PATH
 ~~~
 {: .output}
 
 A quick overview of what the above definition file is doing:
 
  - The image is being bootstrapped from the `ubuntu:20.04` Docker image.
- - In the `%environment` section: Set environment variables that will be available within all containers run from the generated image.
- - In the `%post` section:
+ - In the `RUN` sections:
    - Ubuntu's `apt-get` package manager is used to update the package directory and then install the compilers and other libraries required for the MPICH and OSU benchmark build.
    - The MPICH software is downloaded, extracted, configured, built and installed. Note the use of the `--with-device` option to configure MPICH to use the correct driver to support improved communication performance on a high performance cluster. After the install is complete we delete the files that are no longer needed.
    - The OSU Micro-Benchmarks software is downloaded, extracted, configured, built and installed. After the install is complete we delete the files that are no longer needed.
+ - In the `ENV` sections: Set environment variables that will be available within all containers run from the generated image.
 
 > ## Build and test the OSU Micro-Benchmarks image
 >
-> Using the above definition file, build a Singularity container image named `osu_benchmarks.sif`.
+> Using the above Dockerfile, build a container image, push it to Dockerhub and then use Singularity on the
+> remote HPC platform to convert it to a Singularity container image file: `osu_benchmarks.sif`.
 > 
 > Once the image has finished building, test it by running the `osu_hello` benchmark that is found in the `startup` benchmark folder.
 >
@@ -146,22 +148,35 @@ A quick overview of what the above definition file is doing:
 > 
 > > ## Solution
 > > 
-> > You should be able to build an image from the definition file as follows:
+> > You should be able to build an image from the Dockerfile as follows (replacing `alice` with your Docker Hub username):
 > > 
 > > ~~~
-> > $ singularity build osu_benchmarks.sif osu_benchmarks.def
+> > $ docker build -t alice/osu_benchmarks .
 > > ~~~
 > > {: .language-bash}
 > >
 > >
-> > Assuming the image builds successfully, you can then try running the container locally and also transfer the SIF file to a cluster platform that you have access to (that has Singularity installed) and run it there.
+> > Assuming the image builds successfully, you can then push to Dockerhub with:
 > > 
-> > Let's begin with a single-process run of `startup/osu_hello` on _your local system_ (where you built the container) to ensure that we can run the container as expected. We'll use the MPI installation _within_ the container for this test. Note that when we run a parallel job on an HPC cluster platform, we use the MPI installation on the cluster to coordinate the run so things are a little different...
+> > ~~~
+> > $ docker push alice/osu_benchmarks
+> > ~~~
+> > {: .language-bash}
+> >
+> > Finally, you log into the remote HPC platform and convert to a Singularity image file with:
+> >
+> > ~~~
+> > remote$ singularity build osu_benchmarks.sif docker://alice/osu_benchmarks
+> > ~~~
+> > {: .language-bash}
+> >
+> >
+> > Let's begin with a single-process run of `startup/osu_hello` to ensure that we can run the container as expected. We will use the MPI installation _within_ the container for this test. Note that when we run a parallel job on an HPC cluster platform, we use the MPI installation on the cluster to coordinate the run so things are a little different...
 > > 
 > > Start a shell in the Singularity container based on your image and then run a single process job via `mpirun`:
 > > 
 > > ~~~
-> > $ singularity shell --contain osu_benchmarks.sif
+> > remote$ singularity shell --contain osu_benchmarks.sif
 > > Singularity> mpirun -np 1 osu_hello
 > > ~~~
 > > {: .language-bash}
