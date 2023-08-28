@@ -18,7 +18,7 @@ This lesson will introduce Singularity from scratch showing you how to run a sim
 ## Course details
 
  - Dates:
-   + 0930-1530, Thu 21 Sep 2023
+   + 0930-1600, Thu 21 Sep 2023
  - Location:
    + E06 in the Monica Partridge Building, University of Nottingham, University Park
  - Instructor: Andy Turner, EPCC, University of Edinburgh, UK
