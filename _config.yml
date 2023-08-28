@@ -112,7 +112,7 @@ episode_order:
   - singularity-blast
   - creating-container-images
   - advanced-containers
-  - Singularity-mpi
+  - singularity-mpi
   - reproducibility
   - advanced-topics
 
