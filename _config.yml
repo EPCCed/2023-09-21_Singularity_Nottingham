@@ -106,12 +106,15 @@ episode_order:
   - introduction
   - singularity-gettingstarted
   - singularity-shell
+  - am-break
   - singularity-docker
   - singularity-cache
   - singularity-files
+  - lunch
   - singularity-blast
   - creating-container-images
   - advanced-containers
+  - pm-break
   - singularity-mpi
   - reproducibility
   - advanced-topics

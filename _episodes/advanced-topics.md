@@ -1,6 +1,6 @@
 ---
 title: "Additional topics and next steps"
-teaching: 60
+teaching: 0
 exercises: 0
 questions:
 - "How do I understand more on how containers work?"
