@@ -18,12 +18,10 @@ Please seek help at the start of the lesson if you have not been able to establi
 - The [Docker Hub](http://hub.docker.com). We will use the Docker Hub to download pre-built container images, and for you to upload and download container images that you create, as explained in the relevant lesson episodes.
 
 ## Install Docker Desktop or Docker
-Docker's installation experience has steadily improved, however situations will arise in which installing Docker on your computer may not be straightforward unless you have a large amount of technical experience.
-Workshops try to have helpers on hand that have worked their way through the install process, but do be prepared for some troubleshooting.
 
 In most cases, you will need to have administrator rights on the computer in order to install the Docker software. If you are using a computer managed by your organisation and do not have administrator rights, you *may* be able to get your organisation's IT staff to install Docker for you. Alternatively your IT support staff *may* be able to give you remote access to a server that can run Docker commands.
 
-Please try to install the appropriate software from the list below depending on the operating system that your computer is running. Do let the workshop organisers know as early as possible if you are unable to install Docker using these instructions, as there may be other options available.
+Please try to install the appropriate Docker software from the list below depending on the operating system that your computer is running. Do let the workshop organisers know as early as possible if you are unable to install Docker using these instructions, as there may be other options available.
 
 #### Microsoft Windows
 
@@ -76,6 +74,10 @@ There are too many varieties of Linux to give precise instructions here, but hop
  - [Docker Engine on Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
  - [Docker Engine on Fedora](https://docs.docker.com/install/linux/docker-ce/fedora/)
  - [Docker Engine on Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+
+Alternatively, Docker now provide a version of Docker Desktop for some Linux distributions which give a user experience similar to Docker Desktop on Windows or macOS. You can find instructions on installing this at:
+
+ - [Docker Desktop for Linux](https://docs.docker.com/desktop/install/linux-install/)
 
 ### Verify Installation
 
