@@ -82,9 +82,9 @@ For now, the remainder of this material refers to Singularity but where you
 have a release of Apptainer installed on your local system, you can simply
 replace references to `singularity` with `apptainer`, if you wish.
 
+## Checking Singularity works
 
-Open a terminal on the system that you are using for the course and check that
-the `singularity` command is available in your terminal:
+[Login to ARCHER2](https://docs.archer2.ac.uk/user-guide/connecting/) and check that the `singularity` command is available in your terminal:
 
 ~~~
 $ singularity --version
@@ -92,11 +92,10 @@ $ singularity --version
 {: .language-bash}
 
 ~~~
-singularity-ce version 3.11.0
+singularity version 3.7.3-1
 ~~~
 {: .output}
 
-Depending on the version of Singularity installed on your system, you may see a different version.
 
 > ## Loading a module
 > HPC systems often use *modules* to provide access to software on the system so you may need to use the command:
@@ -105,7 +104,8 @@ Depending on the version of Singularity installed on your system, you may see a 
 > ~~~
 > {: .language-bash}
 > before you can use the `singularity` command on remote systems. However, this depends on how the system is configured.
-> If in doubt, consult the documentation for the system you are using or contact the support team.
+> You do not need to load a module on ARCHER2. If in doubt, consult the documentation for the system you are using
+> or contact the support team.
 {: .callout}
 
 ## Images and containers: reminder
@@ -204,4 +204,7 @@ $ singularity inspect -r lolcow.sif
 
 This shows us the script within the `lolcow.sif` image configured to run by default when we use the `singularity run` command.
 
-That concludes this introductory Singularity episode. The next episode looks in more detail at running containers.
+This seems very simple but already, we have downloaded a container image that is built with a different
+OS than is available on ARCHER2 that also contains software not available on ARCHER2 (`cowsay` and
+`lolcat`) and been able to run this on the ARCHER2 system without needing to install anything ourselves
+and without the container image having to know anything specific about how ARCHER2 is configured.
