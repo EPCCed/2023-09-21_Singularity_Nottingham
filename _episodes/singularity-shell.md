@@ -20,12 +20,12 @@ We saw earlier that we can use the `singularity inspect` command to see the run 
 If we know the path of an executable that we want to run within a container, we can use the `singularity exec` command. For example, using the `lolcow.sif` container that we've already pulled from Singularity Hub, we can run the following within the `test` directory where the `lolcow.sif` file is located:
 
 ~~~
-singularity exec lolcow.sif /bin/echo Hello World!
+singularity exec lolcow.sif /bin/echo "Hello, world"
 ~~~
 {: .language-bash}
 
 ~~~
-Hello World!
+Hello, world
 ~~~
 {: .output}
 
