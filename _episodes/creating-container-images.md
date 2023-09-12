@@ -18,106 +18,150 @@ keypoints:
 - "You can share your Docker container images through the Docker Hub so that others can create Docker containers from your container images."
 ---
 
-There are lots of reasons why you might want to create your **own** Docker container image.
-- You can't find a container image with all the tools you need on Docker Hub.
+There are lots of reasons why you might want to create your **own** container images.
+- You cannot find a container image with all the tools you need in an online repository (such as Docker Hub).
 - You want to have a container image to "archive" all the specific software versions you ran for a project.
 - You want to share your workflow with someone else.
 
+## Why Docker, not Singularity?
+
+In this section we will use Docker, rather than Singularity, to create our own container images. However,
+we will still use Singularity on the remote HPC platform to run containers based on the container images
+we have created. Why do we use a separate tool to create our container images rather than just using 
+Singularity to build container images too?
+
+One of the most important points to note is that, generally you must have administrator privileges on the
+system where you want to build container images. On the remote HPC system where we have been *running* 
+Singularity containers we do not have administrator privileges so we cannot use these systems to build 
+our own container images. In this course, we will use our laptop/workstation to build container images though
+it is also possible ot build them on commercial cloud resources and through other systems such as
+Github actions - using these more advanced options is beyond the scope of this course.
+
+This still does not explain why we are using Docker rather than Singularity to build our container
+images. Using Docker on our laptop/workstation has a number of advantages:
+
+- Docker/Docker Desktop is much easier to install than SingularityCE/Apptainer (particularly on macOS/Windows systems)
+- Docker can build cross-platform - you can build container images for x86 systems on Arm-based systems (such as Mac M1/M2 systems)
+- Docker is generally more efficient in dealing with uploading/downloading container image data that makes it better for moving your container images to remote HPC facilities
+
+As we have already seen, Docker images can be used by Singularity (it converts them to Singularity image format
+automatically) so using Docker to build container images is typically an easier option.
+
+## More on Docker?
+
+You can find a full introduction to Docker in the
+[Introduction to Docker lesson](https://carpentries-incubator.github.io/docker-introduction/)
+in the Carpentries Incubator. Here, we will use a subset of that lesson to build our own
+container images.
+
 ## Interactive installation
 
-Before creating a reproducible installation, let's experiment with installing
-software inside a container. Start a container from the `alpine` container image we used before, interactively:
+We could, potentially, install software in a running container and then save the updated
+state of the running container as a new container image but we are not going to
+use this approach to create our own container images. The main reason why we do not
+do this is that it it reduces the reproducibility of our images. It is also not 
+typical practice for creating container images.
 
-~~~
-$ docker container run -it alpine sh
-~~~
-{: .language-bash}
-
-Because this is a basic container, there's a lot of things not installed -- for
-example, `python3`.
-
-~~~
-/# python3
-~~~
-{: .language-bash}
-~~~
-sh: python3: not found
-~~~
-{: .output}
-
-Inside the container, we can run commands to install Python 3. The Alpine version of
-Linux has a installation tool called `apk` that we can use to install Python 3.
-
-~~~
-/# apk add --update python3 py3-pip python3-dev
-~~~
-{: .language-bash}
-
-We can test our installation by running a Python command:
-~~~
-/# python3 --version
-~~~
-{: .language-bash}
-
-Once Python is installed, we can add Python packages using the pip package installer:
-~~~
-/# pip install cython
-~~~
-{: .language-bash}
-
-> ## Exercise: Searching for Help
->
-> Can you find instructions for installing R on Alpine Linux? Do they work?
->
-> > ## Solution
-> >
-> > A quick search should hopefully show that the way to install R on Alpine Linux is:
-> > ~~~
-> > /# apk add R
-> > ~~~
-> > {: .language-bash}
-> {: .solution}
-{: .challenge}
-
-Once we exit, these changes are not saved to a new container image by default. There is
-a command that will "snapshot" our changes, but building container images this way is
-not easily reproducible. Instead, we're going to take what we've learned from this
-interactive installation and create our container image from a reproducible recipe,
-known as a `Dockerfile`.
+Instead of installing software interactively, we are going to create our container image
+from a reproducible recipe, known as a `Dockerfile`.
 
 If you haven't already, exit out of the interactively running container.
 
+## Check that Docker is working
+
+As mentioned above, we will be building container images on your *local* system
+(usually your laptop) rather than on the remote HPC system. You can keep your terminal
+to the remote system open as we will be using later to run containers based on the
+images we are creating. Open a new terminal on your 
+
+Start the Docker application that you installed in working through the setup instructions for the workshop. Note that this might not be necessary if your laptop is running Linux or if the installation added the Docker application to your startup process. 
+
+> ## You may need to login to Docker Hub
+> The Docker application will usually provide a way for you to log in to the Docker Hub using the application's menu (macOS) or systray
+> icon (Windows) and it is usually convenient to do this when the application starts. This will require you to use your Docker Hub
+> username and your password. We will not actually require access to the Docker Hub until later in the course but if you can login now,
+> you should do so.
+{: .callout}
+
+> ## Determining your Docker Hub username
+> If you no longer recall your Docker Hub username, e.g., because you have been logging into the Docker Hub using your email address,
+> you can find out what it is through the steps:
+> - Open <https://hub.docker.com/> in a web browser window
+> - Sign-in using your email and password (don't tell us what it is)
+> - In the top-right of the screen you will see your username
+{: .callout}
+
+Once your Docker application is running, open a shell (terminal) window, and run the following command to check that Docker is installed and the command line tools are working correctly. Below is the output for a Mac version, but the specific version is unlikely to matter much: it does not have to precisely match the one listed below.
+
 ~~~
-/# exit
+$ docker --version
 ~~~
 {: .language-bash}
+~~~
+Docker version 20.10.5, build 55c4c88
+~~~
+{: .output}
+
+The above command has not actually relied on the part of Docker that runs containers, just that Docker
+is installed and you can access it correctly from the command line.
+
+A command that checks that Docker is working correctly is the `docker container ls` command (we cover this command in more detail later in the course).
+
+Without explaining the details, output on a newly installed system would likely be:
+~~~
+$ docker container ls
+~~~
+{: .language-bash}
+~~~
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+~~~
+{: .output}
+(The command `docker system info` could also be used to verify that Docker is correctly installed and operational but it produces a larger amount of output.)
+
+However, if you instead get a message similar to the following
+~~~
+Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+~~~
+{: .output}
+
+then you need to check that you have started the Docker Desktop, Docker Engine, or however else you worked through the setup instructions.
 
 ## Put installation instructions in a `Dockerfile`
 
-A `Dockerfile` is a plain text file with keywords and commands that
-can be used to create a new container image.
+As mentioned above, building images using Docker should be done by adding the build
+and installaiton instructions into a `Dockerfile`.
 
-From your shell, go to the folder you downloaded at the start of the lesson
-and print out the Dockerfile inside:
+A `Dockerfile` is a plain text file with keywords and commands that can be used by
+Docker to create a new container image. In this first example, we are going to create
+a container image based on the lightweight Alpine Linux distribution with Python 3
+added.
+
+From your shell, create a new folder to contain the Dockerfile. Typically, all the
+data required to build a container image is placed in the same folder - you will 
+have one folder per container image you build.
 
 ~~~
-$ cd ~/Desktop/docker-intro/basic
-$ cat Dockerfile
+$ mkdir alpine-python
+$ cd alpine-python
 ~~~
+
+Once you are in the directory, use your favourite text editor to create the Dockerfile
+to build the new container image. You should create a file called `Dockerfile` with the 
+following contents.
+
 {: .language-bash}
 ~~~
-FROM <EXISTING IMAGE>
-RUN <INSTALL CMDS FROM SHELL>
-RUN <INSTALL CMDS FROM SHELL>
-CMD <CMD TO RUN BY DEFAULT>
+FROM alpine
+RUN apk add --update python3 py3-pip python3-dev
+RUN pip install cython
+CMD ["python3", "--version"]
 ~~~
 {: .output}
 
 Let's break this file down:
 
-- The first line, `FROM`, indicates which container image we're starting with.  It is the "base" container image we are going to start from.
-- The next two lines `RUN`, will indicate installation commands we want to run. These
-are the same commands that we used interactively above.
+- The first line, `FROM`, indicates which container image we're starting with.  It is the "base" container image we are going to start from. In this case, the official Docker Alpine Linux image.
+- The next two lines `RUN`, will indicate installation commands we want to run. These commands first install Python 3 and pip and then use the newly installed `pip` command to install Cython.
 - The last line, `CMD`, indicates the default command we want a
 container based on this container image to run, if no other command is provided. It is recommended
 to provide `CMD` in *exec-form* (see the
@@ -126,9 +170,8 @@ of the Dockerfile documentation for more details). It is written as a
 list which contains the executable to run as its first element,
 optionally followed by any arguments as subsequent elements. The list
 is enclosed in square brackets (`[]`) and its elements are
-double-quoted (`"`) strings which are separated by commas. For
-example, `CMD ["ls", "-lF", "--color", "/etc"]` would translate
-to `ls -lF --color /etc`.
+double-quoted (`"`) strings which are separated by commas. In this example,
+we run the `python3` command with the `--version` option.
 
 > ## *shell-form* and *exec-form* for CMD
 > Another way to specify the parameter for the
@@ -142,43 +185,26 @@ to `ls -lF --color /etc`.
 > are unambiguous in this format.
 {: .callout}
 
-> ## Exercise: Take a Guess
->
-> Do you have any ideas about what we should use to fill in the sample Dockerfile
-> to replicate the installation we did above?
->
-> > ## Solution:
-> > Based on our experience above, edit the `Dockerfile` (in your text editor of choice)
-> > to look like this:
-> > ~~~
-> > FROM alpine
-> > RUN apk add --update python3 py3-pip python3-dev
-> > RUN pip install cython
-> > CMD ["python3", "--version"]
-> > ~~~
-> {: .solution}
-{: .challenge}
-
-The recipe provided by the `Dockerfile` shown in the solution to the preceding exercise will use Alpine Linux as the base container image,
-add Python 3 and the Cython library, and set a default command to request Python 3 to report its version information.
-
-## Create a new Docker image
+## Create a new Docker container image
 
 So far, we only have a text file named `Dockerfile` -- we do not yet have a container image.
-We want Docker to take this `Dockerfile`,
-run the installation commands contained within it, and then save the
-resulting container as a new container image. To do this we will use the
+We want Docker to take this `Dockerfile`, run the installation commands contained within it,
+and then save the resulting container as a new container image. To do this we will use the
 `docker image build` command.
 
-We have to provide `docker image build` with two pieces of information:
-- the location of the `Dockerfile`
-- the name of the new container image. Remember the naming scheme from before? You should name
-your new image with your Docker Hub username and a name for the container image, like this: `USERNAME/CONTAINER_IMAGE_NAME`.
+We have to provide `docker image build` with three pieces of information:
+- The platform to build the container image for. This will usually be `linux/amd64` to make
+  a container image compatible with x86 HPC systems.
+- The name of the new container image. To make uploading to Docker Hub easier, you should
+  name your new image with your Docker Hub username and a name for the container image,
+  like this: `USERNAME/CONTAINER_IMAGE_NAME`.
+- The location of the `Dockerfile`.
 
-All together, the build command that you should run on your computer, will have a similar structure to this:
+All together, the build command that you should run on your computer, will have a similar
+structure to this:
 
 ~~~
-$ docker image build -t USERNAME/CONTAINER_IMAGE_NAME .
+$ docker image build --platform linux/amd64 -t USERNAME/CONTAINER_IMAGE_NAME .
 ~~~
 {: .language-bash}
 
@@ -188,7 +214,7 @@ our current directory.
 For example, if my user name was `alice` and I wanted to call my
 container image `alpine-python`, I would use this command:
 ~~~
-$ docker image build -t alice/alpine-python .
+$ docker image build --platform linux/amd64 -t alice/alpine-python .
 ~~~
 {: .language-bash}
 
@@ -202,50 +228,80 @@ $ docker image build -t alice/alpine-python .
 > they're assumed to be in this location. Docker expects to see a Dockerfile in the
 > build context also (unless you tell it to look elsewhere).
 >
-> Even if it won't need all of the files in the build context directory, Docker does
+> Even if it will not need all of the files in the build context directory, Docker does
 > "load" them before starting to build, which means that it's a good idea to have
 > only what you need for the container image in a build context directory, as we've done
 > in this example.
 {: .callout}
 
+## Listing the images you have locally on your laptop
 
-> ## Exercise: Review!
+To show the images you have available in Docker on your laptop (hopefully including 
+the one you have just built!) you use the `docker image ls` command:
+
+~~~
+$ docker image ls
+~~~
+{: .language-bash}
+~~~
+REPOSITORY                   TAG               IMAGE ID       CREATED          SIZE
+alice/alpine-python          latest            aa0400bf60c3   14 seconds ago   166MB
+~~~
+{: .output}
+
+## Share your new container image on Docker Hub
+
+Container images that you release publicly can be stored on the Docker Hub for free.  If you
+name your container image as described above, with your Docker Hub username, all you need to do
+is run the opposite of `docker image pull` -- `docker image push`.
+
+~~~
+$ docker image push alice/alpine-python
+~~~
+{: .language-bash}
+
+Make sure to substitute the full name of your container image!
+
+In a web browser, open <https://hub.docker.com>, and on your user page you should now see your
+container image listed, for anyone to use or build on.
+
+> ## Logging In
 >
-> 1. Think back to earlier. What command can you run to check if your container image was created
-> successfully? (Hint: what command shows the container images on your computer?)
+> Technically, you have to be logged into Docker on your computer for this to work.
+> Usually it happens by default, but if `docker image push` doesn't work for you,
+> run `docker login` first, enter your Docker Hub username and password, and then
+> try `docker image push` again.
+{: .callout}
+
+> ## Exercise: Run your new container image using Singularity
 >
-> 2. We didn't specify a tag for our container image name. What tag did Docker automatically use?
+> Now your container image is on Docker Hub, you should be able to use what you learned earlier
+> to use Singularity download the new container image to the HPC platform, convert it to 
+> a Singularity SIF file and run a container based on the image.
 >
-> 3. What command will run a container based on the container image you've created? What should happen by default
-> if you run such a container? Can you make it do something different, like print
-> "hello world"?
+> 1. What command (on the remote HPC system) will download your new container image from Docker
+>    Hub and save to a Singularity image file (SIF)?
+> 2. What command would you then use to run a container based on your new container image on the
+>    remote HPC system?
+> 3. Can you make your running container do something different, like print "hello world"?
 >
 > > ## Solution
 > >
-> > 1. To see your new image, run `docker image ls`. You should see the name of your new
-> > container image under the "REPOSITORY" heading.
+> > 1. To download your new image from Docker Hub and save it as a SIF file called 
+> >    `alpine-python.sif` you would use something like 
+> >    `singularity pull alpine-python.sif docker://alice/alpine-python` (.remember to
+> >    use your Docker Hub username instead of `alice`!)
+> > 2. To run the default command using the new container image, you would use
+> >    `singularity run alpine-python.sif`. This should print the version of Python in
+> >    the container.
+> > 3. To run a different command, we would use something like: 
+> >    `singluarity exec alpine-python.sif echo "hello world"`
 > >
-> > 2. In the output of `docker image ls`, you can see that Docker has automatically
-> > used the `latest` tag for our new container image.
-> >
-> > 3. We want to use `docker container run` to run a container based on a container image.
-> >
-> > The following command should run a container and print out our default message, the version
-> > of Python:
-> > ~~~
-> > $ docker container run alice/alpine-python
-> > ~~~
-> > {: .language-bash}
-> >
-> > To run a container based on our container image and print out "Hello world" instead:
-> > ~~~
-> > $ docker container run alice/alpine-python echo "Hello World"
-> > ~~~
 > > {: .language-bash}
 > {: .solution}
 {: .challenge}
 
-While it may not look like you have achieved much, you have already effected the combination of a lightweight Linux operating system with your specification to run a given command that can operate reliably on macOS, Microsoft Windows, Linux and on the cloud!
+While it may not look like you have achieved much, you have already effected the combination of a lightweight Linux operating system with your specification to run a given command that can operate reliably on macOS, Microsoft Windows, Linux and on a remote HPC platform!
 
 ## Boring but important notes about installation
 
@@ -280,36 +336,12 @@ In general, a good strategy for installing software is:
 - Make a list of what you want to install.
 - Look for pre-existing container images.
 - Read through instructions for software you'll need to install.
-- Try installing everything interactively in your base container -- take notes!
-- From your interactive installation, create a `Dockerfile` and then try to build
-the container image from that.
-
-## Share your new container image on Docker Hub
-
-Container images that you release publicly can be stored on the Docker Hub for free.  If you
-name your container image as described above, with your Docker Hub username, all you need to do
-is run the opposite of `docker image pull` -- `docker image push`.
-
-~~~
-$ docker image push alice/alpine-python
-~~~
-{: .language-bash}
-
-Make sure to substitute the full name of your container image!
-
-In a web browser, open <https://hub.docker.com>, and on your user page you should now see your container image listed, for anyone to use or build on.
-
-> ## Logging In
->
-> Technically, you have to be logged into Docker on your computer for this to work.
-> Usually it happens by default, but if `docker image push` doesn't work for you,
-> run `docker login` first, enter your Docker Hub username and password, and then
-> try `docker image push` again.
-{: .callout}
+- Create a `Dockerfile` and then try to build the container image from that.
 
 ## What's in a name? (again)
 
-You don't *have* to name your containers images using the `USERNAME/CONTAINER_IMAGE_NAME:TAG` naming scheme. On your own computer, you can call container images whatever you want, and refer to
+You don't *have* to name your containers images using the `USERNAME/CONTAINER_IMAGE_NAME:TAG`
+naming scheme. On your own computer, you can call container images whatever you want, and refer to
 them by the names you choose. It's only when you want to share a container image that it
 needs the correct naming format.
 
