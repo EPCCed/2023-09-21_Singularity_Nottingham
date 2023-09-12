@@ -29,7 +29,7 @@ Hello, world
 ~~~
 {: .output}
 
-Here we see that a container has been started from the `lolcow.sif` image and the `/bin/echo` command has been run within the container, passing the input `Hello World!`. The command has echoed the provided input to the console and the container has terminated.
+Here we see that a container has been started from the `lolcow.sif` image and the `/bin/echo` command has been run within the container, passing the input `Hello, world`. The command has echoed the provided input to the console and the container has terminated.
 
 Note that the use of `singularity exec` has overriden any run script set within the image metadata and the command that we specified as an argument to `singularity exec` has been run instead.
 
