@@ -35,7 +35,7 @@ Singularity> whoami
 {: .language-bash}
 
 ~~~
-jc1000
+artta118
 ~~~
 {: .output}
 
@@ -81,9 +81,9 @@ Host system:                                                      Singularity co
 │   ├── group  ─> user's group added to group file in container ─>│   ├── group
 │   └── passwd ──> user info added to passwd file in container ──>│   └── passwd
 ├── home                                                          ├── usr
-│   └── jc1000 ───> user home directory made available ──> ─┐     ├── sbin
+│   └── artta118 ───> user home directory made available ──> ─┐   ├── sbin
 ├── usr                 in container via bind mount         │     ├── home
-├── sbin                                                    └────────>└── jc1000
+├── sbin                                                    └────────>└── artta118
 └── ...                                                           └── ...
 
 ~~~
@@ -126,13 +126,11 @@ You will sometimes need to bind additional host system directories into a contai
 - There may be a shared dataset in a location that you need access to in the container
 - You may require executables and software libraries from the host system in the container
 
-The `-B` option to the `singularity` command is used to specify additional binds. For example, to bind the `/mnt/c/Users/Andrew` directory (my
-Windows home directory in WSL2) into a container you could use (note this directory is unlikely to exist on the host system you are using so
-you will need to test this using a different directory):
+The `-B` option to the `singularity` command is used to specify additional binds. For example, to bind the `/work/ta118/ta118/$USER` directory (your space on the ARCHER2 /work file systems) into a container you could use:
 
 ```
-singularity shell -B /mnt/c/Users/Andrew lolcow.sif
-Singularity> ls /mnt/c/Users/Andrew
+singularity shell -B /work/ta118/ta118/$USER lolcow.sif
+Singularity> ls -la /work/ta118/ta118/$USER
 ```
 {: .language-bash}
 
@@ -140,14 +138,14 @@ Note that, by default, a bind is mounted at the same path in the container as on
 mounted in the container by separating the host path from the container path by a colon (`:`) in the option:
 
 ```
-singularity shell -B /mnt/c/Users/Andrew:/Windows lolcow.sif
-Singularity> ls /Windows
+singularity shell -B /work/ta118/ta118/$USER:/work lolcow.sif
+Singularity> ls -la /work
 ```
 {: .language-bash}
 
-You can also specify multiple binds to `-B` by separating them by commas (`,`).
+You can specify multiple binds to `-B` by separating them by commas (`,`).
 
-You can also copy data into a container image at build time if there is some static data required in the image. We cover this later in the section
+Finally, you can also copy data into a container image at build time if there is some static data required in the image. We cover this later in the section
 on building Singularity container images.
 
 ## References
