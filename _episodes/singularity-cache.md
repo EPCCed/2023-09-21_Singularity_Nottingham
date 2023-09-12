@@ -40,8 +40,8 @@ $ singularity cache list
 {: .language-bash}
 
 ~~~
-here are 1 container file(s) using 90.43 MiB and 0 oci blob file(s) using 0.00 KiB of space
-Total space used: 90.43 MiB
+There are 2 container file(s) using 129.35 MiB and 7 oci blob file(s) using 41.49 MiB of space
+Total space used: 170.84 MiB
 ~~~
 {: .output}
 
@@ -53,11 +53,22 @@ $ singularity cache list -v
 {: .language-bash}
 
 ~~~
+There are 2 container file(s) using 129.35 MiB and 7 oci blob file(s) using 41.49 MiB of space
+Total space used: 170.84 MiB
+artta118@ln04:~/test> singularity cache list -v
 NAME                     DATE CREATED           SIZE             TYPE
-sha256.cef378b9a9274c2   2020-06-20 13:20:44    90.43 MiB        library
+50b2668d8d3f74c49a7280   2023-09-12 11:41:31    0.96 KiB         blob
+76f124aca9afaf3f75812d   2023-09-12 11:41:30    2.51 MiB         blob
+7becefa709e2358336177a   2023-09-12 11:41:31    6.25 KiB         blob
+87bc5aa6fc4253b93dee0a   2023-09-12 11:41:30    0.23 KiB         blob
+dae1d9fd74c12f7e66b92c   2023-09-12 11:41:29    10.43 MiB        blob
+e1acddbe380c63f0de4b77   2023-09-12 11:41:27    25.89 MiB        blob
+ecc7ff4d26223f4545c4fd   2023-09-12 11:41:28    2.64 MiB         blob
+sha256.cef378b9a9274c2   2023-09-12 11:39:18    90.43 MiB        library
+28bed4c51c3b531159d8af   2023-09-12 11:41:36    38.92 MiB        oci-tmp
 
-There are 1 container file(s) using 90.43 MiB and 0 oci blob file(s) using 0.00 KiB of space
-Total space used: 90.43 MiB
+There are 2 container file(s) using 129.35 MiB and 7 oci blob file(s) using 41.49 MiB of space
+Total space used: 170.84 MiB
 ~~~
 {: .output}
 
