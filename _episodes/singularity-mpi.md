@@ -13,6 +13,8 @@ keypoints:
 - "Think about parallel application performance requirements and how where you build/run your image may affect that."
 ---
 
+We assume that everyone here is familiar with what MPI is, even if they are not experienced MPI developers.
+
 > ## What is MPI?
 > MPI - [Message Passing Interface](https://en.wikipedia.org/wiki/Message_Passing_Interface) - is a widely
 > used standard for parallel programming. It is used for exchanging messages/data between processes in a
@@ -54,11 +56,7 @@ need to maintain versions that are compatible with both MPICH and OpenMPI. There
 tools that will provide a binary interface between different MPI implementations, e.g. HPE Cray's MPIxlate software
 but these are not generally available yet. 
 
-### Building a container image with MPI software
-
-As before, we will use Docker to create our container image, upload it to Dockerhub and then use Singularity
-on the remote HPC platform to convert to a Singularity container image file and run a container based on the 
-resulting container image file.
+### Building a Singularity container image with MPI software
 
 This example makes the assumption that you'll be building a container image on a local platform and then deploying
 it to a HPC system with a different but compatible MPI implementation using a combination of the *Hybrid* and *Bind*
@@ -72,70 +70,127 @@ The example we will build will:
 * Use the Ohio State University MPI Micro-benchmarks as the example application
 * Use ARCHER2 as the runtime platform - this uses Cray MPT as the host MPI library and the HPE Cray Slingshot interconnect
 
-The Dockerfile to install MPICH and the OSU micro-benchmark we will use
+The Singularity container image definition file to install MPICH and the OSU micro-benchmark we will use
 to build the container image is shown below. Save this in a file called `osu_benchmarks.def`
 
 ~~~
-FROM ubuntu:20.04
+Bootstrap: docker
+From: ubuntu:20.04
 
-ENV DEBIAN_FRONTEND=noninteractive
+%environment
+    export OSU_DIR=/usr/local/libexec/osu-micro-benchmarks/mpi
+    export LD_LIBRARY_PATH=/usr/lib/libibverbs:$LD_LIBRARY_PATH
+    export PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/startup:$PATH
+    export PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt:$PATH
+    export PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/collective:$PATH
 
-# Install the necessary packages (from repo)
-RUN apt-get update && apt-get install -y --no-install-recommends \
- apt-utils \
- build-essential \
- curl \
- libcurl4-openssl-dev \
- libzmq3-dev \
- pkg-config \
- software-properties-common
-RUN apt-get clean
-RUN apt-get install -y dkms
-RUN apt-get install -y autoconf automake build-essential numactl libnuma-dev autoconf automake gcc g++ git libtool
+%post
+    export DEBIAN_FRONTEND=noninteractive TZ=Europe/London
+    # Install required dependencies
+    apt-get update && apt-get install -y --no-install-recommends \
+        apt-utils \
+        build-essential \
+        curl \
+        libcurl4-openssl-dev \
+        libzmq3-dev \
+        pkg-config \
+        software-properties-common
+    apt-get clean
+    apt-get install -y dkms
+    apt-get install -y autoconf automake build-essential numactl libnuma-dev autoconf automake gcc g++ git libtool
 
-# Download and build an ABI compatible MPICH
-RUN curl -sSLO http://www.mpich.org/static/downloads/3.4.2/mpich-3.4.2.tar.gz \
-   && tar -xzf mpich-3.4.2.tar.gz -C /root \
-   && cd /root/mpich-3.4.2 \
-   && ./configure --prefix=/usr --with-device=ch4:ofi --disable-fortran \
-   && make -j8 install \
-   && rm -rf /root/mpich-3.4.2 \
-   && rm /mpich-3.4.2.tar.gz
+    # Download and build an ABI compatible MPICH
+    cd /
+    curl -k -sSLO http://www.mpich.org/static/downloads/3.4.2/mpich-3.4.2.tar.gz \
+        && tar -xzf mpich-3.4.2.tar.gz -C /root \
+        && cd /root/mpich-3.4.2 \
+        && ./configure --prefix=/usr --with-device=ch4:ofi --disable-fortran \
+        && make -j8 install \
+        && cd / \
+        && rm -rf /root/mpich-3.4.2 \
+        && rm /mpich-3.4.2.tar.gz
 
-# OSU benchmarks
-RUN curl -sSLO http://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-5.4.1.tar.gz \
-   && tar -xzf osu-micro-benchmarks-5.4.1.tar.gz -C /root \
-   && cd /root/osu-micro-benchmarks-5.4.1 \
-   && ./configure --prefix=/usr/local CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx \
-   && cd mpi \
-   && make -j8 install \
-   && rm -rf /root/osu-micro-benchmarks-5.4.1 \
-   && rm /osu-micro-benchmarks-5.4.1.tar.gz
+    # Download and build OSU benchmarks
+    curl -k -sSLO http://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-5.4.1.tar.gz \
+        && tar -xzf osu-micro-benchmarks-5.4.1.tar.gz -C /root \
+        && cd /root/osu-micro-benchmarks-5.4.1 \
+        && ./configure --prefix=/usr/local CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx \
+        && cd mpi \
+        && make -j8 install \
+        && cd / \
+        && rm -rf /root/osu-micro-benchmarks-5.4.1 \
+        && rm /osu-micro-benchmarks-5.4.1.tar.gz
 
-# Add the OSU benchmark executables to the PATH
-ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/startup:$PATH
-ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt:$PATH
-ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/collective:$PATH
-ENV OSU_DIR=/usr/local/libexec/osu-micro-benchmarks/mpi
-
-# path to mlx IB libraries in Ubuntu
-ENV LD_LIBRARY_PATH=/usr/lib/libibverbs:$LD_LIBRARY_PATH
 ~~~
 {: .output}
 
 A quick overview of what the above definition file is doing:
 
  - The image is being bootstrapped from the `ubuntu:20.04` Docker image.
- - In the `RUN` sections:
+ - In the `%environment` section: Set environment variables that will be available within all containers run from the generated image.
+ - In the `%post` section:
    - Ubuntu's `apt-get` package manager is used to update the package directory and then install the compilers and other libraries required for the MPICH and OSU benchmark build.
    - The MPICH software is downloaded, extracted, configured, built and installed. Note the use of the `--with-device` option to configure MPICH to use the correct driver to support improved communication performance on a high performance cluster. After the install is complete we delete the files that are no longer needed.
    - The OSU Micro-Benchmarks software is downloaded, extracted, configured, built and installed. After the install is complete we delete the files that are no longer needed.
- - In the `ENV` sections: Set environment variables that will be available within all containers run from the generated image.
+
+> ## Build with Docker
+>
+> > ## Dockerfile
+> >
+> > ```
+> > FROM ubuntu:20.04
+> > 
+> > ENV DEBIAN_FRONTEND=noninteractive
+> > 
+> > # Install the necessary packages (from repo)
+> > RUN apt-get update && apt-get install -y --no-install-recommends \
+> >  apt-utils \
+> >  build-essential \
+> >  curl \
+> >  libcurl4-openssl-dev \
+> >  libzmq3-dev \
+> >  pkg-config \
+> >  software-properties-common
+> > RUN apt-get clean
+> > RUN apt-get install -y dkms
+> > RUN apt-get install -y autoconf automake build-essential numactl libnuma-dev autoconf automake gcc g++ git libtool
+> > 
+> > # Download and build an ABI compatible MPICH
+> > RUN curl -sSLO http://www.mpich.org/static/downloads/3.4.2/mpich-3.4.2.tar.gz \
+> >    && tar -xzf mpich-3.4.2.tar.gz -C /root \
+> >    && cd /root/mpich-3.4.2 \
+> >    && ./configure --prefix=/usr --with-device=ch4:ofi --disable-fortran \
+> >    && make -j8 install \
+> >    && cd / \
+> >    && rm -rf /root/mpich-3.4.2 \
+> >    && rm /mpich-3.4.2.tar.gz
+> > 
+> > # OSU benchmarks
+> > RUN curl -sSLO http://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-5.4.1.tar.gz \
+> >    && tar -xzf osu-micro-benchmarks-5.4.1.tar.gz -C /root \
+> >    && cd /root/osu-micro-benchmarks-5.4.1 \
+> >    && ./configure --prefix=/usr/local CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx \
+> >    && cd mpi \
+> >    && make -j8 install \
+> >    && cd / \
+> >    && rm -rf /root/osu-micro-benchmarks-5.4.1 \
+> >    && rm /osu-micro-benchmarks-5.4.1.tar.gz
+> > 
+> > # Add the OSU benchmark executables to the PATH
+> > ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/startup:$PATH
+> > ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt:$PATH
+> > ENV PATH=/usr/local/libexec/osu-micro-benchmarks/mpi/collective:$PATH
+> > ENV OSU_DIR=/usr/local/libexec/osu-micro-benchmarks/mpi
+> > 
+> > # path to mlx IB libraries in Ubuntu
+> > ENV LD_LIBRARY_PATH=/usr/lib/libibverbs:$LD_LIBRARY_PATH
+> > ```
+> {: .solution}
+{: .callout}
 
 > ## Build and test the OSU Micro-Benchmarks image
 >
-> Using the above Dockerfile, build a container image, push it to Dockerhub and then use Singularity on the
-> remote HPC platform to convert it to a Singularity container image file: `osu_benchmarks.sif`.
+> Using the above definition file, build a Singularity container image named `osu_benchmarks.sif`.
 > 
 > Once the image has finished building, test it by running the `osu_hello` benchmark that is found in the `startup` benchmark folder.
 >
@@ -148,35 +203,22 @@ A quick overview of what the above definition file is doing:
 > 
 > > ## Solution
 > > 
-> > You should be able to build an image from the Dockerfile as follows (replacing `alice` with your Docker Hub username):
+> > You should be able to build an image from the definition file as follows:
 > > 
 > > ~~~
-> > $ docker build -t alice/osu_benchmarks .
+> > $ singularity build osu_benchmarks.sif osu_benchmarks.def
 > > ~~~
 > > {: .language-bash}
 > >
 > >
-> > Assuming the image builds successfully, you can then push to Dockerhub with:
+> > Assuming the image builds successfully, you can then try running the container locally and also transfer the SIF file to a cluster platform that you have access to (that has Singularity installed) and run it there.
 > > 
-> > ~~~
-> > $ docker push alice/osu_benchmarks
-> > ~~~
-> > {: .language-bash}
-> >
-> > Finally, you log into the remote HPC platform and convert to a Singularity image file with:
-> >
-> > ~~~
-> > remote$ singularity build osu_benchmarks.sif docker://alice/osu_benchmarks
-> > ~~~
-> > {: .language-bash}
-> >
-> >
-> > Let's begin with a single-process run of `startup/osu_hello` to ensure that we can run the container as expected. We will use the MPI installation _within_ the container for this test. Note that when we run a parallel job on an HPC cluster platform, we use the MPI installation on the cluster to coordinate the run so things are a little different...
+> > Let's begin with a single-process run of `startup/osu_hello` on _your local system_ (where you built the container) to ensure that we can run the container as expected. We'll use the MPI installation _within_ the container for this test. Note that when we run a parallel job on an HPC cluster platform, we use the MPI installation on the cluster to coordinate the run so things are a little different...
 > > 
 > > Start a shell in the Singularity container based on your image and then run a single process job via `mpirun`:
 > > 
 > > ~~~
-> > remote$ singularity shell --contain osu_benchmarks.sif
+> > $ singularity shell --contain osu_benchmarks.sif
 > > Singularity> mpirun -np 1 osu_hello
 > > ~~~
 > > {: .language-bash}
@@ -286,7 +328,7 @@ export SINGULARITYENV_LD_LIBRARY_PATH="/opt/cray/pe/mpich/8.1.23/ofi/gnu/9.1/lib
 > ~~~
 > {: .language-bash}
 > 
-> > ## Expected output and discussion
+> > ## Solution
 > > 
 > > As you can see in the mpirun command shown above, we have called `srun` on the host system
 > > and are passing to MPI the `singularity` executable for which the parameters are the image
@@ -328,6 +370,17 @@ This has demonstrated that we can successfully run a parallel MPI executable fro
 > > 
 > > Here are some selected results measured on ARCHER2:
 > > 
+> >  1 node:
+> > - 4 B
+> >   + Native: 6.13 us
+> >   + Container: 5.30 us (16% faster)
+> > - 128 KiB
+> >   + Native: 173.00 us
+> >   + Container: 230.38 us (25% slower)
+> > - 1 MiB
+> >   + Native: 1291.18 us
+> >   + Container: 2101.02 us (39% slower)
+> >
 > >  16 nodes:
 > > - 4 B
 > >   + Native: 17.66 us
@@ -338,6 +391,7 @@ This has demonstrated that we can successfully run a parallel MPI executable fro
 > > - 1 MiB
 > >   + Native: 1501.25 us
 > >   + Container: 2359.11 us (36% slower)
+> >
 > >  32 nodes:
 > > - 4 B
 > >   + Native: 30.72 us
@@ -372,4 +426,4 @@ compute nodes. However, there are some limitations, specifically:
   on the system. The effect is dependent on the MPI routines used in your application, message sizes and the number of MPI 
   processes used.
 
-{% include links.md %}
+
