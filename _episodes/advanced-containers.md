@@ -52,8 +52,6 @@ following contents:
 ~~~
 #!/usr/bin/env python3
 
-# Comment added in container
-
 import sys
 try:
    total = sum(int(arg) for arg in sys.argv[1:])
@@ -66,11 +64,11 @@ except ValueError:
 Let's assume that we've finished with our `sum.py`
 script and want to add it to the container image itself.
 
-### Create the Dockerfile
+### Create the Dockerfile
 
 Now we have our Python script, we are going to create our Dockerfile. This is going 
 to be similar to the Dockerfile we used in the previous section with the addition of
-one additional line. Here is the full Dockerfile:
+one extra line. Here is the full Dockerfile:
 
 ~~~
 FROM alpine
@@ -92,6 +90,9 @@ and then push it to Docker Hub (remember to subsitute `alice` for your Docker Hu
 
 ~~~
 $ docker image build --platform linux/amd64 -t alice/alpine-sum .
+
+...output from docker build...
+
 $ docker push alice/alpine-sum
 ~~~
 {: .language-bash}
