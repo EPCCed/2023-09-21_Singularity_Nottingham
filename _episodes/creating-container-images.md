@@ -65,14 +65,12 @@ typical practice for creating container images.
 Instead of installing software interactively, we are going to create our container image
 from a reproducible recipe, known as a `Dockerfile`.
 
-If you haven't already, exit out of the interactively running container.
-
 ## Check that Docker is working
 
 As mentioned above, we will be building container images on your *local* system
 (usually your laptop) rather than on the remote HPC system. You can keep your terminal
 to the remote system open as we will be using later to run containers based on the
-images we are creating. Open a new terminal on your 
+images we are creating. Open a new terminal on your laptop.
 
 Start the Docker application that you installed in working through the setup instructions for the workshop. Note that this might not be necessary if your laptop is running Linux or if the installation added the Docker application to your startup process. 
 
@@ -136,7 +134,7 @@ Docker to create a new container image. In this first example, we are going to c
 a container image based on the lightweight Alpine Linux distribution with Python 3
 added.
 
-From your shell, create a new folder to contain the Dockerfile. Typically, all the
+From your shell, create a new folder to contain the `Dockerfile``. Typically, all the
 data required to build a container image is placed in the same folder - you will 
 have one folder per container image you build.
 
@@ -218,6 +216,58 @@ $ docker image build --platform linux/amd64 -t alice/alpine-python .
 ~~~
 {: .language-bash}
 
+> ## Build your container image
+>
+> Based on the information above, try using Docker to build your container image.
+>
+> > ## Solution
+> > 
+> > Using a command like:
+> > ~~~
+> > $ docker image build --platform linux/amd64 -t alice/alpine-python .
+> > ~~~
+> > {: .language-bash}
+> > should build the new container image. while building, you will see output similar to:
+> >
+> > ~~~
+> > [+] Building 21.4s (7/7) FINISHED                                                                           
+> > docker:desktop-linux
+> > => [internal] load .dockerignore  0.0s
+> > =>
+> > => transferring context: 2B  0.0s
+> > => [internal] load build definition from Dockerfile  0.0s
+> > =>
+> > => transferring dockerfile: 159B  0.0s
+> > => [internal] load metadata for docker.io/library/alpine:latest 1.3s
+> > => [1/3] FROM docker.io/library/alpine:latest@sha256:7144f7bab3d4c2648d7e59409f15ec52a18006a128c733fcff20d3a4a54ba44a 0.4s
+> > =>
+> > => resolve docker.io/library/alpine:latest@sha256:7144f7bab3d4c2648d7e59409f15ec52a18006a128c733fcff20d3a4a54ba44a 0.0s
+> > =>
+> > => sha256:7144f7bab3d4c2648d7e59409f15ec52a18006a128c733fcff20d3a4a54ba44a 1.64kB / 1.64kB 0.0s
+> > =>
+> > => sha256:c5c5fda71656f28e49ac9c5416b3643eaa6a108a8093151d6d1afc9463be8e33 528B / 528B 0.0s
+> > =>
+> > => sha256:7e01a0d0a1dcd9e539f8e9bbd80106d59efbdf97293b3d38f5d7a34501526cdb 1.47kB / 1.47kB 0.0s
+> > =>
+> > => sha256:7264a8db6415046d36d16ba98b79778e18accee6ffa71850405994cffa9be7de 3.40MB / 3.40MB 0.3s
+> > =>
+> > => extracting sha256:7264a8db6415046d36d16ba98b79778e18accee6ffa71850405994cffa9be7de     0.1s
+> > => [2/3] RUN apk add --update python3 py3-pip python3-dev                                 8.2s
+> > => [3/3] RUN pip install cython                                                           0.3s 
+> > =>
+> > => exporting layers                                                                       0.3s 
+> > =>
+> > => writing image sha256:b317a6d5b97daee5055cc4cb4432dd6cfe98a9e6f67ed5b3036fda608c629d23  0.0s 
+> > =>
+> > => naming to docker.io/atunerepcc/alpine-python                                           0.0s 
+> > 
+> > What's Next?                          
+> >   View summary of image vulnerabilities and recommendations → docker scout quickview
+> > ~~~
+> > {: .output}
+> {: .solution}
+{: .challenge}
+
 > ## Build Context
 >
 > Notice that the final input to `docker image build` isn't the Dockerfile -- it's
@@ -289,8 +339,8 @@ container image listed, for anyone to use or build on.
 > >
 > > 1. To download your new image from Docker Hub and save it as a SIF file called 
 > >    `alpine-python.sif` you would use something like 
-> >    `singularity pull alpine-python.sif docker://alice/alpine-python` (.remember to
-> >    use your Docker Hub username instead of `alice`!)
+> >    `singularity pull alpine-python.sif docker://alice/alpine-python` (remember to
+> >    use your Docker Hub username instead of `alice`!).
 > > 2. To run the default command using the new container image, you would use
 > >    `singularity run alpine-python.sif`. This should print the version of Python in
 > >    the container.
