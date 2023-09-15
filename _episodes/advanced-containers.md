@@ -218,11 +218,12 @@ remote$ singularity run alpine-sum_v1.sif 10 11 12
 results in:
 
 ~~~
-sum = 0
+FATAL:   "10": executable file not found in $PATH
 ~~~
 {: .output}
 
-This is because the arguments `10 11 12` are ignored by the `CMD` syntax.
+This is because the arguments `10 11 12` are ignored by the `CMD` syntax and the container
+tries to interpret them as additional commands instead of arguments to the `sum.py` script.
 
 To achieve the goal of having a command that *always* runs when a
 container is run from the container image *and* can be passed the arguments given on the
