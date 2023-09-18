@@ -20,7 +20,7 @@ We saw earlier that we can use the `singularity inspect` command to see the run 
 If we know the path of an executable that we want to run within a container, we can use the `singularity exec` command. For example, using the `lolcow.sif` container that we've already pulled from Singularity Hub, we can run the following within the `test` directory where the `lolcow.sif` file is located:
 
 ~~~
-singularity exec lolcow.sif /bin/echo "Hello, world"
+remote$ singularity exec lolcow.sif /bin/echo "Hello, world"
 ~~~
 {: .language-bash}
 
@@ -40,7 +40,7 @@ Note that the use of `singularity exec` has overriden any run script set within 
 > > ## Solution
 > >
 > > ~~~
-> > singularity exec lolcow.sif /bin/date
+> > remote$ singularity exec lolcow.sif /bin/date
 > > ~~~
 > > {: .language-bash}
 > > 
@@ -77,7 +77,7 @@ two commands is:
 If you want to open an interactive shell within a container, Singularity provides the `singularity shell` command. Again, using the `lolcow.sif` image, and within our `test` directory, we can run a shell within a container from the hello-world image:
 
 ~~~
-$ singularity shell lolcow.sif
+remote$ singularity shell lolcow.sif
 ~~~
 {: .language-bash}
 

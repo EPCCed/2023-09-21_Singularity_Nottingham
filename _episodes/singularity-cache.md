@@ -20,8 +20,8 @@ Singularity uses a local cache to save downloaded container image files in addit
 If you delete a local `.sif` container image that you have pulled from a remote container image repository and then pull it again, if the container image is unchanged from the version you previously pulled, you will be given a copy of the container image file from your local cache rather than the container image being downloaded again from the remote source. This removes unnecessary network transfers and is particularly useful for large container images which may take some time to transfer over the network. To demonstrate this, remove the `lolcow.sif` file stored in your `test` directory and then issue the `pull` command again:
 
 ~~~
-$ rm lolcow.sif
-$ singularity pull lolcow.sif library://lolcow
+remote$ rm lolcow.sif
+remote$ singularity pull lolcow.sif library://lolcow
 ~~~
 {: .language-bash}
 
@@ -35,7 +35,7 @@ As we can see in the above output, the container image has been returned from th
 How do we know what is stored in the local cache? We can find out using the `singularity cache` command:
 
 ~~~
-$ singularity cache list
+remote$ singularity cache list
 ~~~
 {: .language-bash}
 
@@ -48,7 +48,7 @@ Total space used: 170.84 MiB
 This tells us how many container image files are stored in the cache and how much disk space the cache is using but it doesn't tell us _what_ is actually being stored. To find out more information we can add the `-v` verbose flag to the `list` command:
 
 ~~~
-$ singularity cache list -v
+remote$ singularity cache list -v
 ~~~
 {: .language-bash}
 

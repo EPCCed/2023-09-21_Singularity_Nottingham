@@ -16,7 +16,7 @@ keypoints:
 - "Virtualization allows multiple environments to run on a single computer."
 - "Containerization improves upon the virtualization of whole computers by allowing efficient management of the host computer's memory and storage resources."
 - "Containers are built from 'recipes' that define the required set of software components and the instructions necessary to build/install them within a container image."
-- "Singularity is just one software platform that can create containers and the resources they use."
+- "Singularity and Docker are examples of software platforms that can create containers and the resources they use."
 ---
 
 > ## Learning about Containers

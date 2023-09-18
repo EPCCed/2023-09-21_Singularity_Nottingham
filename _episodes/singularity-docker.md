@@ -19,7 +19,7 @@ While Singularity doesn't actually run a container using the Docker container im
 For example, moving on from the simple _Hello World_ examples that we've looked at so far, let's pull one of the [official Docker Python container images](https://hub.docker.com/_/python). We'll use the image with the tag `3.9.6-slim-buster` which has Python 3.9.6 installed on Debian's [Buster](https://www.debian.org/releases/buster/) (v10) Linux distribution:
 
 ~~~
-$ singularity pull python-3.9.6.sif docker://python:3.9.6-slim-buster
+remote$ singularity pull python-3.9.6.sif docker://python:3.9.6-slim-buster
 ~~~
 {: .language-bash}
 
@@ -57,7 +57,7 @@ We can now run a container from this container image as we would with any other 
 > > ## Running the Python 3.9.6 image
 > >
 > > ~~~
-> > $ singularity run python-3.9.6.sif
+> > remote$ singularity run python-3.9.6.sif
 > > ~~~
 > > {: .language-bash}
 > > 
@@ -93,7 +93,7 @@ In addition to running a container and having it run the default run script, you
 > >
 > > Recall from the earlier material that we can use the `singularity shell` command to open a shell within a container. To open a regular shell within a container based on the `python-3.9.6.sif` container image, we can therefore simply run:
 > > ~~~
-> > $ singularity shell python-3.9.6.sif
+> > remote$ singularity shell python-3.9.6.sif
 > > ~~~
 > > {: .language-bash}
 > > 
@@ -119,7 +119,7 @@ In addition to running a container and having it run the default run script, you
 > > It is also possible to use the `singularity exec` command to run an executable within a container. We could, therefore, use the `exec` command to run `/bin/bash`:
 > > 
 > > ~~~
-> > $ singularity exec python-3.9.6.sif /bin/bash
+> > remote$ singularity exec python-3.9.6.sif /bin/bash
 > > ~~~
 > > {: .language-bash}
 > > 

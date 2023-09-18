@@ -127,7 +127,7 @@ then you need to check that you have started the Docker Desktop, Docker Engine, 
 ## Put installation instructions in a `Dockerfile`
 
 As mentioned above, building images using Docker should be done by adding the build
-and installaiton instructions into a `Dockerfile`.
+and installation instructions into a `Dockerfile`.
 
 A `Dockerfile` is a plain text file with keywords and commands that can be used by
 Docker to create a new container image. In this first example, we are going to create
@@ -142,12 +142,12 @@ have one folder per container image you build.
 $ mkdir alpine-python
 $ cd alpine-python
 ~~~
+{: .language-bash}
 
 Once you are in the directory, use your favourite text editor to create the Dockerfile
 to build the new container image. You should create a file called `Dockerfile` with the 
 following contents.
 
-{: .language-bash}
 ~~~
 FROM alpine
 RUN apk add --update python3 py3-pip python3-dev
@@ -339,13 +339,31 @@ container image listed, for anyone to use or build on.
 > >
 > > 1. To download your new image from Docker Hub and save it as a SIF file called 
 > >    `alpine-python.sif` you would use something like 
-> >    `singularity pull alpine-python.sif docker://alice/alpine-python` (remember to
-> >    use your Docker Hub username instead of `alice`!).
+> >
+> >    ```
+> >    remote$ singularity pull alpine-python.sif docker://alice/alpine-python
+> >    ```
+> >    {: .language-bash}
+> > 
+> >    (remember to use your Docker Hub username instead of `alice`!).
+> >
 > > 2. To run the default command using the new container image, you would use
-> >    `singularity run alpine-python.sif`. This should print the version of Python in
+> >
+> >    ```
+> >    remote$ singularity run alpine-python.sif
+> >    ```
+> >    {: .language-bash}
+> > 
+> >    This should print the version of Python in
 > >    the container.
+> >
 > > 3. To run a different command, we would use something like: 
-> >    `singluarity exec alpine-python.sif echo "hello world"`
+> >
+> >    ```
+> >    remote$ singluarity exec alpine-python.sif echo "hello world"
+> >    ```
+> >    {: .language-bash}
+> > 
 > >
 > > {: .language-bash}
 > {: .solution}

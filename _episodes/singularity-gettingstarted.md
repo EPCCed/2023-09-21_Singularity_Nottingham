@@ -84,10 +84,17 @@ replace references to `singularity` with `apptainer`, if you wish.
 
 ## Checking Singularity works
 
-[Login to ARCHER2](https://docs.archer2.ac.uk/user-guide/connecting/) and check that the `singularity` command is available in your terminal:
+[Login to ARCHER2](https://docs.archer2.ac.uk/user-guide/connecting/) using the
+login address `training.dyn.archer2.ac.uk`:
 
 ~~~
-$ singularity --version
+ssh -i /path/to/ssh-key user@training.dyn.archer2.ac.uk
+~~~
+
+Now check that the `singularity` command is available in your terminal:
+
+~~~
+remote$ singularity --version
 ~~~
 {: .language-bash}
 
@@ -100,7 +107,7 @@ singularity version 3.7.3-1
 > ## Loading a module
 > HPC systems often use *modules* to provide access to software on the system so you may need to use the command:
 > ~~~
-> $ module load singularity
+> remote$ module load singularity
 > ~~~
 > {: .language-bash}
 > before you can use the `singularity` command on remote systems. However, this depends on how the system is configured.
@@ -129,9 +136,9 @@ Singularity uses the [Singularity Image Format (SIF)](https://github.com/sylabs/
 Let's begin by creating a `test` directory, changing into it and _pulling_ an existing container image from Sylabs Cloud Library:
 
 ~~~
-$ mkdir test
-$ cd test
-$ singularity pull lolcow.sif library://lolcow
+remote$ mkdir test
+remote$ cd test
+remote$ singularity pull lolcow.sif library://lolcow
 ~~~
 {: .language-bash}
 
@@ -144,7 +151,7 @@ INFO:    Downloading library image
 What just happened? We pulled a container image from a remote repository using the `singularity pull` command and directed it to store the container image in a file using the name `lolcow.sif` in the current directory. If you run the `ls` command, you should see that the `lolcow.sif` file is now present in the current directory.
 
 ~~~
-$ ls -lh
+remote$ ls -lh
 ~~~
 {: .language-bash}
 
@@ -159,7 +166,7 @@ total 60M
 We can now run a container based on the `lolcow.sif` container image:
 
 ~~~
-$ singularity run lolcow.sif
+remote$ singularity run lolcow.sif
 ~~~
 {: .language-bash}
 
@@ -190,7 +197,7 @@ How did the container determine what to do when we ran it? What did running the 
 When you run a container from a Singularity container image using the `singularity run` command, the container runs the default run script that is embedded within the container image. This is a shell script that can be used to run commands, tools or applications stored within the container image on container startup. We can inspect the container image's run script using the `singularity inspect` command:
 
 ~~~
-$ singularity inspect -r lolcow.sif
+remote$ singularity inspect -r lolcow.sif
 ~~~
 {: .language-bash}
 

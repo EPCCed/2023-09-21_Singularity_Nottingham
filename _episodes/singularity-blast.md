@@ -37,7 +37,8 @@ Download the [blast_example.tar.gz]({{ page.root }}/files/blast_example.tar.gz).
 Unpack the archive which contains the downloaded data required for the BLAST+ example:
 
 ~~~
-tar -xvf blast_example.tar.gz
+remote$ wget https://epcced.github.io/2023-09-21_Singularity_Nottingham/files/blast_example.tar.gz
+remote$ tar -xvf blast_example.tar.gz
 ~~~
 {: .language-bash}
 ~~~
@@ -55,8 +56,8 @@ x blast/queries/P01349.fsa
 Finally, move into the newly created directory:
 
 ~~~
-cd blast
-ls  
+remote$ cd blast
+remote$ ls  
 ~~~
 {: .language-bash}
 ~~~
@@ -70,7 +71,7 @@ NCBI provide official Docker containers with the BLAST+ software hosted on Docke
 a Singularity container image from the Docker container image with:
 
 ~~~
-singularity pull ncbi-blast.sif docker://ncbi/blast
+remote$ singularity pull ncbi-blast.sif docker://ncbi/blast
 ~~~
 {: .language-bash}
 ~~~
@@ -138,7 +139,7 @@ use these downloaded data to create a custom BLAST database by using a container
 the command `makeblastdb` with the correct options.
 
 ~~~
-singularity exec ncbi-blast.sif \
+remote$ singularity exec ncbi-blast.sif \
     makeblastdb -in fasta/nurse-shark-proteins.fsa -dbtype prot \
     -parse_seqids -out nurse-shark-proteins -title "Nurse shark proteins" \
     -taxid 7801 -blastdb_version 5
@@ -162,7 +163,7 @@ To verify the newly created BLAST database above, you can run the
 the accessions, sequence length, and common name of the sequences in the database.
 
 ~~~
-singularity exec ncbi-blast.sif \
+remote$ singularity exec ncbi-blast.sif \
     blastdbcmd -entry all -db nurse-shark-proteins -outfmt "%a %l %T"
 ~~~
 {: .language-bash}
@@ -185,7 +186,7 @@ Now we have our database we can run queries against it.
 Lets execute a query on our database using the `blastp` command:
 
 ~~~
-singularity exec ncbi-blast.sif \
+remote$ singularity exec ncbi-blast.sif \
     blastp -query queries/P01349.fsa -db nurse-shark-proteins \
     -out results/blastp.out
 ~~~
@@ -195,7 +196,7 @@ At this point, you should see the results of the query in the output file `resul
 To view the content of this output file, use the command `less results/blastp.out`.
 
 ~~~
-less results/blastp.out
+remote$ less results/blastp.out
 ~~~
 {: .language-bash}
 
@@ -230,7 +231,7 @@ available online. For example, to see which databases are available online in th
 Platform (GCP):
 
 ~~~
-singularity exec ncbi-blast.sif update_blastdb.pl --showall pretty --source gcp
+remote$ singularity exec ncbi-blast.sif update_blastdb.pl --showall pretty --source gcp
 ~~~
 {: .language-bash}
 
@@ -254,7 +255,7 @@ refseq_rna                                                   NCBI Transcript Ref
 Similarly, for databases hosted at NCBI:
 
 ~~~
-singularity exec ncbi-blast.sif update_blastdb.pl --showall pretty --source ncbi
+remote$ singularity exec ncbi-blast.sif update_blastdb.pl --showall pretty --source ncbi
 ~~~
 {: .language-bash}
 
@@ -284,15 +285,15 @@ you needing to set them up even though you were running using containers:
    because Singularity automatically binds the current directory into the running container, so
    any data in the current directory (or its subdirectories) will generally be available in
    running Singularity containers. (If you have used Docker containers, you will notice that
-   this is different from the defalt behaviour there.)
+   this is different from the default behaviour there.)
 2. Access to the internet is automatically available within the running container in the same
    way as it is on the host system without us needed to specify any additional options.
 4. Files and data we create within the container have the right ownership and permissions for
    us to access outside the container.
 
-In addtion, we were able to use the tools in the container image provided by NCBI without having
-to do any work to install the software irrespecetive of the computing platform that we are using.
+In addition, we were able to use the tools in the container image provided by NCBI without having
+to do any work to install the software irrespective of the computing platform that we are using.
 (In fact, the example this is based on runs the pipeline using Docker on a cloud computing platform
-rather than on your local systeam.)
+rather than on your local system.)
 
 

@@ -272,7 +272,7 @@ export SINGULARITYENV_LD_LIBRARY_PATH="/opt/cray/pe/mpich/8.1.23/ofi/gnu/9.1/lib
 > Finally, submit the job to the batch system with
 >
 > ~~~
-> sbatch submit.slurm
+> remote$ sbatch submit.slurm
 > ~~~
 > {: .language-bash}
 > 

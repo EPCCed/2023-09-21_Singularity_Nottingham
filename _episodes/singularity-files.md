@@ -29,7 +29,7 @@ you should have seen the same username that you have on the host system when you
 For example, if my username were `jc1000`, I would expect to see the following:
 
 ~~~
-singularity shell lolcow.sif
+remote$ singularity shell lolcow.sif
 Singularity> whoami
 ~~~
 {: .language-bash}
@@ -126,11 +126,11 @@ You will sometimes need to bind additional host system directories into a contai
 - There may be a shared dataset in a location that you need access to in the container
 - You may require executables and software libraries from the host system in the container
 
-The `-B` option to the `singularity` command is used to specify additional binds. For example, to bind the `/work/ta118/ta118/$USER` directory (your space on the ARCHER2 /work file systems) into a container you could use:
+The `-B` option to the `singularity` command is used to specify additional binds. For example, to bind the `/opt/cray` directory (where the HPE Cray programming environment is stored) into a container you could use:
 
 ```
-singularity shell -B /work/ta118/ta118/$USER lolcow.sif
-Singularity> ls -la /work/ta118/ta118/$USER
+remote$ singularity shell -B /opt/cray lolcow.sif
+Singularity> ls -la /opt/cray
 ```
 {: .language-bash}
 
@@ -138,15 +138,22 @@ Note that, by default, a bind is mounted at the same path in the container as on
 mounted in the container by separating the host path from the container path by a colon (`:`) in the option:
 
 ```
-singularity shell -B /work/ta118/ta118/$USER:/work lolcow.sif
-Singularity> ls -la /work
+remote$ singularity shell -B /opt/cray:/cpe lolcow.sif
+Singularity> ls -la /cpe
 ```
 {: .language-bash}
 
 You can specify multiple binds to `-B` by separating them by commas (`,`).
 
-Finally, you can also copy data into a container image at build time if there is some static data required in the image. We cover this later in the section
-on building Singularity container images.
+Another option is to specify the paths you want to bind in the `SINGULARITY_BIND` environment variable. This can be more convenient when you have a lot of paths you want to bind into the running container (we will see this later in the course when we look at using MPI with containers). For example, to bind the locations that contain both the HPE Cray programming environment and the CSE centrally installed software into a running container, we would use:
+
+```
+remote$ export SINGULARITY_BIND="/opt/cray,/work/y07/shared"
+remote$ singularity shell lolcow.sif
+Singularity> ls -la /work/y07/shared
+```
+
+Finally, you can also copy data into a container image at build time if there is some static data required in the image. We cover this later in the section on building container images.
 
 ## References
 

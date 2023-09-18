@@ -19,17 +19,6 @@ our previous example. You may want to use files from outside the container,
 that are not included within the container image by copying the files 
 into the container image at build time.
 
-<!--
-You may also want to learn a little bit 
-about how to install software within a running container or a container image. 
-This episode will look at these advanced aspects of running a container or building 
-a container image.
--->
-
-Note that the examples will get gradually
-more and more complex -- most day-to-day use of containers and container images can be accomplished
-using the first 1--2 sections on this page.
-
 ### Create a Python script
 
 Before we go ahead and build our next container image, we're going
